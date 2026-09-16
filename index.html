@@ -811,16 +811,16 @@
         { label: 'View code', href: 'https://github.com/sabinshamsul/medivision-dashboard' }
       ],
       demo: { src: 'https://medivision-dashboard.vercel.app/', note: 'Hosted on Vercel. If it does not load here, open it in a new tab.' },
-      overview: [
-        'A web platform for hospital emergency departments built around a machine-learning triage classifier, with real-time patient tracking and visual analytics. Built by a team of five as our capstone project.',
-        'I was project manager and owned the backend and the integration of the ML service into the application.'
+      problem: [
+        'Emergency departments triage patients under pressure, with paper handovers and no shared view of where each patient is. Severity gets misjudged at intake, staff cannot see bed availability or wait times in real time, and department-wide metrics are only visible after the fact.',
+        'Our capstone brief was to build a working platform that fixes that flow end to end, as a team of five. I was project manager and owned the backend and the ML service integration.'
       ],
-      highlights: [
-        '<strong>AI-assisted triage.</strong> An XGBoost classifier predicts patient severity from vital signs and symptoms. Nurses review every prediction and can override it, and all overrides are logged.',
-        '<strong>Real-time tracking.</strong> Patient status updates flow across the pathway with Socket.io, no refresh needed.',
-        '<strong>Analytics dashboard.</strong> Department load, wait times and patient flow charted with Recharts.',
-        '<strong>Role-based access.</strong> JWT-authenticated logins with distinct permissions per clinical role.',
-        '<strong>ML as a service.</strong> The model runs in its own FastAPI microservice so it can be retrained and redeployed without touching the main app.'
+      solution: [
+        '<strong>Triage recommendation from data.</strong> An XGBoost classifier predicts severity from vital signs and symptoms at intake. Nurses review and can override every prediction, and overrides are logged, so the model assists rather than decides.',
+        '<strong>One live view of the department.</strong> Patient status updates push to every screen over Socket.io, so staff see the pathway without refreshing.',
+        '<strong>Metrics while they still matter.</strong> Department load, wait times and patient flow are charted with Recharts on a dashboard, not in a monthly report.',
+        '<strong>Right access for each role.</strong> JWT logins with role-based permissions for clinical staff.',
+        '<strong>Model that can evolve.</strong> The classifier runs in its own FastAPI microservice, so it can be retrained and redeployed without touching the main app.'
       ],
       shots: [
         ['medivision-dashboard/main/screenshots/dashboard.png', 'Dashboard'],
@@ -839,15 +839,17 @@
       ],
       demo: { src: 'https://sabinshamsul-bone-fracture-detection.hf.space', note: 'Upload an X-ray of a hand, leg, hip or shoulder to get a prediction and a Grad-CAM heatmap. The Space may take a minute to wake up.' },
       stats: [['86%', 'Overall accuracy'], ['74%', 'Fracture recall'], ['0.89', 'Validation AUC'], ['4,083', 'Hospital X-rays']],
-      overview: [
-        'Transfer learning with EfficientNetB0 on the FracAtlas dataset, 4,083 musculoskeletal X-rays from three hospitals. Images are contrast-enhanced with CLAHE before training, and class weighting handles the 17.6% fractured minority.',
-        'The model does not only predict. Grad-CAM highlights the regions that drove each decision, so the output can be checked against anatomy.'
+      problem: [
+        'Fractures are easy to miss on X-rays, especially subtle ones, and a second reader is not always available. A classifier alone is not enough in a clinical setting: if it cannot show why it flagged an image, no one can check it.',
+        'The data adds a second problem. In the FracAtlas dataset only 17.6% of the 4,083 hospital X-rays are fractured, so a naive model learns to say "no fracture" and still looks accurate.'
       ],
-      highlights: [
-        '<strong>Two-stage transfer learning</strong> in TensorFlow and Keras, trained on Colab GPU.',
-        '<strong>Grad-CAM analysis</strong> of sample predictions showed the model attending to bone shafts, joints and surgical hardware.',
-        '<strong>Honest limitation found.</strong> In 2 of 10 samples the model focused on image-border artefacts, likely from CLAHE creating high-contrast edges. Documented as shortcut learning with a plan to crop borders and cross-check with Integrated Gradients.',
-        '<strong>Shipped.</strong> Gradio interface deployed as a public Hugging Face Space, plus a CLI inference tool.'
+      solution: [
+        '<strong>Transfer learning instead of training from scratch.</strong> EfficientNetB0 pretrained on ImageNet, fine-tuned in two stages in TensorFlow on a Colab GPU.',
+        '<strong>Better input before the model sees it.</strong> CLAHE contrast enhancement in OpenCV makes bone edges and fracture lines clearer.',
+        '<strong>Class weighting for the imbalance.</strong> Fractured cases are weighted up during training, lifting fracture recall to 74% with 86% overall accuracy and 0.89 AUC.',
+        '<strong>Explanations, not just answers.</strong> Grad-CAM heatmaps show which regions drove each prediction. Reviewing them confirmed the model attends to bone shafts, joints and surgical hardware.',
+        '<strong>A weakness found and documented.</strong> In 2 of 10 samples the model focused on image-border artefacts from CLAHE. Recorded as shortcut learning, with border cropping and Integrated Gradients as next steps.',
+        '<strong>Usable by anyone.</strong> Deployed as a public Gradio app on Hugging Face Spaces, plus a CLI for batch inference.'
       ],
       shots: [
         ['Bone-Fracture-Detection/main/results/gradcam_batch.png', 'Grad-CAM heatmaps on sample X-rays', 'wide'],
@@ -865,16 +867,17 @@
       ],
       demo: { src: 'https://sabinshamsul-rag-ai-governance.hf.space', note: 'Ask a question about AI laws or policies. Answers are grounded in the AGORA corpus with citations. Free-tier rate limits apply.' },
       stats: [['~650', 'Laws and policies'], ['5,203', 'Indexed chunks'], ['384', 'Embedding dimensions']],
-      overview: [
-        'Language models answer from memory and can confidently make things up. This system retrieves the most relevant passages from a corpus of real AI-governance documents first, then asks the model to answer only from those passages and to say so when the corpus cannot answer.',
-        'Built from the ground up without LangChain or LlamaIndex so that every step, from loading to citation, is understood and owned.'
+      problem: [
+        'Ask a language model about AI regulation and it answers from memory, confidently, and sometimes wrongly. For legal and policy questions that is worse than no answer, because a fabricated citation looks exactly like a real one.',
+        'The AGORA corpus has roughly 650 AI laws, bills and policy frameworks split into 5,400 sections. The task was to answer questions using only that text, cite every claim, and refuse when the corpus does not cover the question.'
       ],
-      highlights: [
-        "<strong>Ingestion.</strong> Joins segment text with document metadata, drops non-operative segments, and keeps the dataset's expert segmentation instead of re-chunking legal provisions.",
-        '<strong>Indexing.</strong> Each chunk is embedded with all-MiniLM-L6-v2 and stored in a FAISS flat index. Build once, load many.',
-        '<strong>Grounded generation.</strong> Gemini answers only from retrieved context, cites sources by number, and synthesises across jurisdictions where relevant.',
-        '<strong>Refusal threshold.</strong> If the best match scores below 0.3, the system declines without calling the model. The threshold came from the observed gap between relevant and irrelevant queries.',
-        '<strong>Limitations documented.</strong> General-purpose embeddings, truncated long segments, manual evaluation and no conversation memory.'
+      solution: [
+        '<strong>Retrieve first, then answer.</strong> Each question is embedded with all-MiniLM-L6-v2 and matched against a FAISS index of 5,203 cleaned chunks, so the model only ever sees relevant source passages.',
+        '<strong>Grounding enforced in the prompt.</strong> Gemini is instructed to answer only from the retrieved context, cite sources by number, and synthesise across jurisdictions where they differ.',
+        '<strong>Refusal by design.</strong> If the best match scores below 0.3, the system says it does not have enough information and never calls the model. The threshold came from the observed gap between relevant and irrelevant queries.',
+        '<strong>Respecting the data.</strong> The dataset\'s expert segmentation is kept instead of re-chunking, because each segment is a self-contained legal provision. Non-operative segments are filtered out before indexing.',
+        '<strong>Built without a framework.</strong> No LangChain or LlamaIndex, so every step from loading to citation is understood and can be swapped.',
+        '<strong>Limits stated openly.</strong> General-purpose embeddings, truncated long segments, manual evaluation and no conversation memory are all documented.'
       ],
       shots: [
         ['rag-ai/main/screenshots/06_generation_output.png', 'Grounded answer with citations across jurisdictions', 'wide'],
@@ -890,15 +893,16 @@
         { label: 'View code and write-up', href: 'https://github.com/sabinshamsul/loan-repayment', primary: true, note: 'private repo' }
       ],
       stats: [['0.814', 'AUC-ROC'], ['80%', 'Bad-loan recall'], ['74%', 'Accuracy'], ['~525k', 'Payment records']],
-      overview: [
-        'Predicting whether a borrower will repay, using three real lending datasets: loan applications, per-loan payment history and third-party underwriting checks. The goal is to flag high-risk applicants before money is disbursed.',
-        'The raw data has no target variable. A binary repayment label was engineered from loan status, with unresolved loans excluded to avoid noise.'
+      problem: [
+        'A lender sees nearly 60% of funded loans default. Every bad loan approved is a direct loss, so the question is which applicants to flag before money goes out.',
+        'The data made that harder than it sounds: three separate tables (applications, per-loan payment history, third-party underwriting checks), about 525,000 payment records, and no target column to predict.'
       ],
-      highlights: [
-        '<strong>Feature engineering.</strong> Payment-behaviour features such as success rate, payment count and first-payment status were built from the payments table. Two of the top four predictors came from this engineered set.',
-        '<strong>Model comparison.</strong> Random Forest beat the Logistic Regression baseline on every metric and was selected as the final model.',
-        '<strong>EDA findings.</strong> Nearly 60% of funded loans defaulted. Returning customers repaid at far higher rates than cold leads, and weekly payers were the highest-risk group.',
-        '<strong>Recommendations.</strong> Prioritise applicants with payment history, flag failed first payments for manual review, and price weekly-payment borrowers as higher risk.'
+      solution: [
+        '<strong>Defined the target.</strong> Engineered a binary repayment label from loan status, and excluded loans whose outcome was still unknown so they would not add noise.',
+        '<strong>Turned payment history into features.</strong> Payment success rate, total payment attempts and first-payment status were built from the payments table and merged onto each loan. Two of the top four predictors came from this set.',
+        '<strong>Compared a baseline against an ensemble.</strong> Random Forest beat Logistic Regression on every metric and was selected: 0.814 AUC, 80% recall on bad loans, 74% accuracy.',
+        '<strong>Found what actually predicts default.</strong> Scheduled payment amount, payment success rate, fraud score and a failed first payment. Returning customers repaid far more often than cold leads; weekly payers were the riskiest group.',
+        '<strong>Made it actionable.</strong> Recommendations: prioritise applicants with payment history, send failed first payments to manual review, price weekly-payment borrowers as higher risk.'
       ],
       shots: [
         ['assets/loan/top_15_features.png', 'Top 15 features by importance', '', true],
@@ -915,16 +919,16 @@
         { label: 'Open live site', href: 'https://kadku.sabinshamsul.dev/', primary: true }
       ],
       demo: { src: 'https://kadku.sabinshamsul.dev/', note: 'This is the real card. It is designed for a phone screen, so it looks best in the narrow frame.' },
-      overview: [
-        'After a few career fairs the same conversation kept happening: spelling out an email, searching for a LinkedIn profile, having only a paper resume. kadku puts all of that behind one QR scan.',
-        'A lightweight, mobile-first page hosted on GitHub Pages and deployed automatically on every push.'
+      problem: [
+        'At career fairs the same thing kept happening. Spelling out an email address letter by letter. Helping a recruiter search for the right LinkedIn profile. Having only a paper copy of a resume. Every one of those moments is friction right when it matters most.',
+        'The card had to work on a stranger\'s phone in seconds, with nothing to install and nothing to type.'
       ],
-      highlights: [
-        "<strong>Instant vCard.</strong> One tap or scan saves contact details straight into the recruiter's phone book.",
-        '<strong>Direct links.</strong> LinkedIn profile and the latest PDF resume, one scan away.',
-        '<strong>Accordion UI.</strong> Each section opens on tap and scrolls the QR code into view.',
+      solution: [
+        '<strong>One scan, everything saved.</strong> A vCard QR code writes contact details straight into the recruiter\'s phone book.',
+        '<strong>No searching.</strong> Direct QR links to the LinkedIn profile and the latest PDF resume.',
+        '<strong>Built for a phone screen.</strong> A mobile-first accordion: each section opens on tap and scrolls the full QR code into view.',
         '<strong>Bilingual.</strong> A toggle switches the whole card between Bahasa Melayu and English.',
-        '<strong>CI/CD.</strong> GitHub Actions deploys to GitHub Pages, with a CNAME pointing at the custom subdomain.'
+        '<strong>Zero maintenance hosting.</strong> Static HTML and Tailwind on GitHub Pages, deployed by GitHub Actions on every push, served from a custom subdomain.'
       ],
       stack: ['HTML', 'Tailwind CSS', 'vCard', 'QR codes', 'GitHub Actions', 'GitHub Pages']
     },
@@ -934,14 +938,15 @@
       links: [
         { label: 'Open Wokwi simulation', href: 'https://wokwi.com/projects/436298272500748289', primary: true }
       ],
-      overview: [
-        'An IoT prototype that keeps houseplants alive without daily attention. Sensors read soil moisture, temperature, humidity and soil pH, and a pump waters the plant automatically when moisture drops below a threshold.',
-        'Built on an ESP32 for sensing and actuation, with a Raspberry Pi collecting readings for monitoring. The circuit and firmware can be run in the Wokwi simulator.'
+      problem: [
+        'Houseplants die from inconsistent care: overwatered one week, forgotten the next. Soil moisture, temperature, humidity and pH all matter, but none of them are visible without checking by hand.',
+        'The coursework brief was a working IoT prototype that senses those conditions and acts on them without a person in the loop.'
       ],
-      highlights: [
-        '<strong>Sensor integration.</strong> Multiple analog and digital sensors read on a schedule from the ESP32.',
-        '<strong>Automatic watering.</strong> Threshold-based control of a pump so the plant is watered only when the soil is dry.',
-        '<strong>Real-time monitoring.</strong> Readings streamed to a Raspberry Pi for logging and display.'
+      solution: [
+        '<strong>Sense the plant, not the calendar.</strong> An ESP32 reads soil moisture, temperature, humidity and soil pH sensors on a schedule.',
+        '<strong>Water only when needed.</strong> A relay-driven pump runs when moisture drops below a threshold, so the plant is watered by its actual condition.',
+        '<strong>See it in real time.</strong> Readings stream to a Raspberry Pi for logging and monitoring.',
+        '<strong>Reproducible.</strong> The circuit and firmware run in the Wokwi simulator, so the build can be inspected and tested without the hardware.'
       ],
       stack: ['ESP32', 'Raspberry Pi', 'Python', 'Wokwi']
     }
@@ -965,8 +970,8 @@
     if (p.stats) html += '<div class="pd-stats">' + p.stats.map(([n, l]) =>
       `<div><div class="pd-stat-num">${esc(n)}</div><div class="pd-stat-label">${esc(l)}</div></div>`).join('') + '</div>';
 
-    html += '<div class="pd-section"><h3>Overview</h3>' + p.overview.map(t => `<p>${t}</p>`).join('') + '</div>';
-    html += '<div class="pd-section"><h3>What it does</h3><ul>' + p.highlights.map(t => `<li>${t}</li>`).join('') + '</ul></div>';
+    html += '<div class="pd-section"><h3>Problem</h3>' + p.problem.map(t => `<p>${t}</p>`).join('') + '</div>';
+    html += '<div class="pd-section"><h3>Solution</h3><ul>' + p.solution.map(t => `<li>${t}</li>`).join('') + '</ul></div>';
 
     if (p.shots) html += '<div class="pd-section"><h3>Screenshots</h3><div class="pd-shots">' + p.shots.map(([src, cap, cls, local]) =>
       `<figure class="${cls || ''}"><img loading="lazy" src="${local ? src : GH + src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
