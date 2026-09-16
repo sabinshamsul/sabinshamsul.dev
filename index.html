@@ -283,17 +283,136 @@
   .pd-stack { display: flex; flex-wrap: wrap; gap: 6px; }
 
   /* ─── MOTION ─── */
-  .reveal { opacity: 0; transform: translateY(12px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
+  /* Theme change fades instead of snapping */
+  body, nav, .card, .facts, .skill-group, .cta, .tag, .btn-secondary, .cta-link, .pd-frame { transition-property: background-color, border-color, color; transition-duration: 0.35s; transition-timing-function: ease; }
+  .card { transition: background-color 0.35s ease, border-color 0.2s, transform 0.35s var(--ease), box-shadow 0.35s var(--ease); }
+
+  /* Scroll progress line */
+  .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 101; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--primary), var(--accent)); pointer-events: none; }
+
+  /* Hero ambient: faint grid + slow-breathing blue glow, dark canvas only */
+  #hero { position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
+  .hero-bg::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: radial-gradient(var(--hairline-strong) 1px, transparent 1px);
+    background-size: 28px 28px; opacity: 0.45;
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, #000 20%, transparent 70%);
+    mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, #000 20%, transparent 70%);
+  }
+  .hero-bg::after {
+    content: ''; position: absolute; width: 720px; height: 720px; left: -160px; top: -120px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(37,99,235,0.28) 0%, rgba(37,99,235,0) 62%);
+    filter: blur(20px); animation: breathe 9s ease-in-out infinite;
+  }
+  [data-theme="light"] .hero-bg::after { background: radial-gradient(circle, rgba(37,99,235,0.14) 0%, rgba(37,99,235,0) 62%); }
+  #hero .container { position: relative; z-index: 1; }
+  @keyframes breathe { 0%, 100% { transform: translate(0,0) scale(1); opacity: .9; } 50% { transform: translate(60px,30px) scale(1.12); opacity: 1; } }
+
+  /* Hero entrance: id row, then headline word by word, then sub, then buttons */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @keyframes wordUp { from { opacity: 0; transform: translateY(0.6em) rotate(1.5deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: blur(0); } }
+  .hero-id, .hero-sub, .hero-ctas { animation: fadeUp 0.7s var(--ease) both; }
+  .hero-id { animation-delay: 0.05s; }
+  .hero-sub { animation-delay: 0.55s; }
+  .hero-ctas { animation-delay: 0.7s; }
+  .hero-title .w { display: inline-block; animation: wordUp 0.8s var(--ease) both; animation-delay: calc(0.15s + var(--i) * 0.06s); }
+  .hero-id img { animation: avatarIn 0.9s var(--ease) both; }
+  @keyframes avatarIn { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
+
+  /* Scroll reveal with per-child stagger */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
   .reveal.visible { opacity: 1; transform: none; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
-  .hero-in > * { animation: fadeUp 0.7s var(--ease) both; }
-  .hero-in > *:nth-child(2) { animation-delay: 0.08s; }
-  .hero-in > *:nth-child(3) { animation-delay: 0.16s; }
-  .hero-in > *:nth-child(4) { animation-delay: 0.24s; }
+  .stagger > * { opacity: 0; }
+  .stagger.visible > * { opacity: 1; animation: fadeUp 0.6s var(--ease) backwards; animation-delay: calc(var(--i, 0) * 70ms); }
+
+  /* Section titles: underline draws in */
+  .section-title { position: relative; display: inline-block; }
+  .section-title::after { content: ''; position: absolute; left: 0; bottom: -6px; height: 2px; width: 40px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.6s var(--ease) 0.2s; }
+  .visible .section-title::after, .section-title.visible::after { transform: scaleX(1); }
+
+  /* Cards: spotlight border under the cursor, image lift, arrow nudge */
+  .card::before {
+    content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none; opacity: 0;
+    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(96,165,250,0.55), transparent 60%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
+    transition: opacity 0.3s;
+  }
+  .card:hover::before { opacity: 1; }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(0,0,0,0.6); }
+  [data-theme="light"] .card:hover { box-shadow: 0 20px 40px -24px rgba(15,16,17,0.25); }
+  .card-shot { position: relative; }
+  .card-shot img { transition: transform 0.6s var(--ease); }
+  .card:hover .card-shot img { transform: scale(1.04); }
+  .card-shot::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--surface-1), transparent 55%); opacity: 0; transition: opacity 0.35s; pointer-events: none; }
+  .card:hover .card-shot::after { opacity: 0.5; }
+  .link.live { transition: color 0.15s; }
+  .link .arr, .link.live { position: relative; }
+  .card:hover .link.live { text-decoration: underline; text-underline-offset: 3px; }
+
+  /* Buttons: lift and sheen */
+  .btn { position: relative; overflow: hidden; }
+  .btn:hover { transform: translateY(-1px); }
+  .btn:active { transform: translateY(1px); }
+  .btn-primary::after { content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.28), transparent); transform: skewX(-20deg); transition: left 0.6s var(--ease); }
+  .btn-primary:hover::after { left: 120%; }
+
+  /* Tags, fact rows, contact links */
+  .tag { transition: border-color 0.2s, color 0.2s, transform 0.2s var(--ease), background-color 0.35s ease; }
+  .tag:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
+  .fact { transition: background-color 0.2s; }
+  .fact:hover { background: var(--surface-2); }
+  .cta-link { transition: border-color 0.2s, background-color 0.2s, transform 0.25s var(--ease); }
+  .cta-link:hover { transform: translateX(4px); }
+  .cta-link:active { transform: translateX(4px) scale(0.99); }
+
+  /* Status dot pulse */
+  .pill.ok::before { box-shadow: 0 0 0 0 rgba(39,166,68,0.5); animation: ping 2.4s ease-out infinite; }
+  @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(39,166,68,0.5); } 70% { box-shadow: 0 0 0 7px rgba(39,166,68,0); } 100% { box-shadow: 0 0 0 0 rgba(39,166,68,0); } }
+
+  /* Experience rows slide in from the timeline rule */
+  .xp-item { position: relative; }
+  .xp-item::before { content: ''; position: absolute; left: 0; top: -1px; height: 1px; width: 0; background: var(--accent); transition: width 0.9s var(--ease); }
+  .stagger.visible .xp-item::before { width: 64px; }
+
+  /* Nav: hairline strengthens once scrolled */
+  nav { transition: border-color 0.3s, background-color 0.35s ease; }
+  nav.scrolled { border-color: var(--hairline-strong); }
+  .nav-links a { position: relative; }
+  .nav-links a::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: 2px; height: 1.5px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.3s var(--ease); }
+  .nav-links a.active::after { transform: scaleX(1); }
+
+  /* Dialog entrance */
+  .pd[open] .pd-frame { animation: dialogIn 0.45s var(--ease) both; }
+  .pd[open]::backdrop { animation: fadeIn 0.3s ease both; }
+  @keyframes dialogIn { from { opacity: 0; transform: translateY(16px) scale(0.985); } to { opacity: 1; transform: none; } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .pd-body > * { animation: fadeUp 0.5s var(--ease) both; }
+  .pd-body > *:nth-child(2) { animation-delay: 0.05s; }
+  .pd-body > *:nth-child(3) { animation-delay: 0.1s; }
+  .pd-body > *:nth-child(4) { animation-delay: 0.15s; }
+  .pd-body > *:nth-child(5) { animation-delay: 0.2s; }
+  .pd-body > *:nth-child(n+6) { animation-delay: 0.25s; }
+  .pd-shots img { transition: transform 0.4s var(--ease), border-color 0.2s; }
+  .pd-shots img:hover { transform: scale(1.015); border-color: var(--hairline-strong); }
+
+  /* Touch: no hover lift, but a press response */
+  @media (hover: none) {
+    .card:hover { transform: none; box-shadow: none; }
+    .card:hover .card-shot img { transform: none; }
+    .card::before { display: none; }
+    .card:active { transform: scale(0.99); background: var(--surface-2); }
+    .btn:hover { transform: none; }
+    .cta-link:hover { transform: none; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; }
-    .reveal { opacity: 1; transform: none; }
+    .reveal, .stagger > * { opacity: 1 !important; transform: none; }
+    .section-title::after { transform: scaleX(1); }
+    .hero-bg::after { display: none; }
+    .progress { display: none; }
   }
 
   /* ─── RESPONSIVE ─── */
@@ -331,6 +450,7 @@
 
 <a href="#main" class="skip-link">Skip to content</a>
 
+<div class="progress" id="progress" aria-hidden="true"></div>
 <nav aria-label="Primary">
   <div class="container nav-inner">
     <a href="#hero" class="nav-logo"><img src="profile-720.jpg" alt="" width="24" height="24">Syahmi Shamsul</a>
@@ -357,6 +477,7 @@
 
 <!-- HERO -->
 <section id="hero" style="border-top:0">
+  <div class="hero-bg" aria-hidden="true"></div>
   <div class="container hero-in">
     <div class="hero-id">
       <img src="profile-720.jpg" alt="Portrait of Syahmi Shamsul" width="44" height="44" fetchpriority="high">
@@ -378,7 +499,7 @@
 <section id="about">
   <div class="container">
     <h2 class="section-title solo reveal">👋 About</h2>
-    <div class="about reveal">
+    <div class="about reveal stagger">
       <div class="about-text">
         <p>I'm a final-year Computer Science student specialising in Data Science with an extension in Artificial Intelligence. I care about the whole path from raw data to something people can use: cleaning and auditing data, training and evaluating models, then deploying them behind real interfaces.</p>
         <p>Right now I'm a Software Engineering &amp; Data Analytics Intern at Cashku, a Malaysian fintech, where I work on data quality across the platform's fund universe. Before that I led a five-person team building MediVision, a patient flow platform for emergency departments with an XGBoost triage model in production.</p>
@@ -401,7 +522,7 @@
 <section id="experience">
   <div class="container">
     <h2 class="section-title solo reveal">💼 Experience</h2>
-    <div class="reveal">
+    <div class="reveal stagger">
       <div class="xp-item">
         <div class="xp-when">Jul 2026 - Present<span class="pill ok">Current</span></div>
         <div>
@@ -440,9 +561,9 @@
       <h2 class="section-title">🚀 Projects</h2>
       <p class="section-lede">Six projects, four with live demos. Open any card for the full write-up, screenshots and an embedded demo.</p>
     </div>
-    <div class="projects">
+    <div class="projects reveal stagger">
 
-      <article class="card reveal" data-project="medivision">
+      <article class="card" data-project="medivision">
         <div class="card-shot"><img loading="lazy" src="https://raw.githubusercontent.com/sabinshamsul/medivision-dashboard/main/screenshots/triage.png" alt="MediVision AI triage with nurse review"></div>
         <div class="card-body">
           <div class="card-kicker">Final Year Project · Full-stack + ML</div>
@@ -455,7 +576,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-project="bone">
+      <article class="card" data-project="bone">
         <div class="card-shot"><img loading="lazy" src="https://raw.githubusercontent.com/sabinshamsul/Bone-Fracture-Detection/main/results/gradcam_batch.png" alt="Grad-CAM heatmaps on X-rays"></div>
         <div class="card-body">
           <div class="card-kicker">Computer vision · Explainable AI</div>
@@ -469,7 +590,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-project="rag">
+      <article class="card" data-project="rag">
         <div class="card-shot"><img loading="lazy" src="assets/rag-shot.png" alt="AI-Governance RAG live demo"></div>
         <div class="card-body">
           <div class="card-kicker">LLM · Retrieval-augmented generation</div>
@@ -483,7 +604,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-project="loan">
+      <article class="card" data-project="loan">
         <div class="card-shot"><img loading="lazy" src="assets/loan/top_15_features.png" alt="Top 15 most important features"></div>
         <div class="card-body">
           <div class="card-kicker">Machine learning · Credit risk</div>
@@ -497,7 +618,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-project="kadku">
+      <article class="card" data-project="kadku">
         <div class="card-shot"><img loading="lazy" src="assets/kadku-card.png" alt="kadku digital business card"></div>
         <div class="card-body">
           <div class="card-kicker">Web · Weekend build</div>
@@ -510,7 +631,7 @@
         </div>
       </article>
 
-      <article class="card reveal" data-project="plants">
+      <article class="card" data-project="plants">
         <div class="card-shot"><img loading="lazy" src="assets/plants.jpg" alt="Smart plant monitoring prototype with ESP8266, sensors, relay, pump and LCD"></div>
         <div class="card-body">
           <div class="card-kicker">IoT · Embedded</div>
@@ -531,7 +652,7 @@
 <section id="skills">
   <div class="container">
     <h2 class="section-title solo reveal">🛠️ Skills</h2>
-    <div class="skills reveal">
+    <div class="skills reveal stagger">
       <div class="skill-group">
         <h3>Languages and data<span>7</span></h3>
         <div class="skill-tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">R</span><span class="tag">Java</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">scikit-learn</span></div>
@@ -619,11 +740,64 @@
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
-  // Scroll reveal
+  // Hero headline: split into words for the staggered entrance
+  const h1 = document.querySelector('.hero-title');
+  let wi = 0;
+  h1.innerHTML = h1.innerHTML.replace(/(<span>)?([^<\s]+)(<\/span>)?/g, (m, open, word, close) =>
+    `${open || ''}<span class="w" style="--i:${wi++}">${word}</span>${close || ''}`);
+
+  // Scroll reveal (staggered children get an index)
+  document.querySelectorAll('.stagger').forEach(g => [...g.children].forEach((c, i) => c.style.setProperty('--i', i)));
   const revealObserver = new IntersectionObserver(entries => {
     entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); revealObserver.unobserve(entry.target); } });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.08, rootMargin: '0px 0px -8% 0px' });
   document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+  // Scroll progress + nav state (rAF-throttled)
+  const progress = document.getElementById('progress');
+  const navEl = document.querySelector('nav');
+  let ticking = false;
+  const onScroll = () => {
+    if (ticking) return; ticking = true;
+    requestAnimationFrame(() => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      progress.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+      navEl.classList.toggle('scrolled', scrollY > 8);
+      ticking = false;
+    });
+  };
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Card spotlight follows the pointer (desktop only)
+  if (matchMedia('(hover: hover)').matches) {
+    document.querySelectorAll('.card').forEach(card => {
+      card.addEventListener('pointermove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+      });
+    });
+  }
+
+  // Count-up for dialog stats
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function countUp(el) {
+    const text = el.textContent.trim();
+    const m = text.match(/^([~]?)([\d,]*\.?\d+)(.*)$/);
+    if (!m || reduceMotion) return;
+    const prefix = m[1], suffix = m[3], target = parseFloat(m[2].replace(/,/g, ''));
+    const decimals = (m[2].split('.')[1] || '').length;
+    const useComma = m[2].includes(',');
+    const t0 = performance.now(), dur = 900;
+    const fmt = v => { let n = v.toFixed(decimals); if (useComma) n = Number(n).toLocaleString('en-US', { minimumFractionDigits: decimals }); return prefix + n + suffix; };
+    const step = now => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(target * e);
+      if (k < 1) requestAnimationFrame(step); else el.textContent = text;
+    };
+    requestAnimationFrame(step);
+    setTimeout(() => { el.textContent = text; }, dur + 80);
+  }
 
   // ─── Project detail dialog ───
   const GH = 'https://raw.githubusercontent.com/sabinshamsul/';
@@ -805,6 +979,7 @@
 
     pdBody.innerHTML = html;
     pdBody.scrollTop = 0;
+    pdBody.querySelectorAll('.pd-stat-num').forEach(countUp);
   }
 
   function openProject(key) {

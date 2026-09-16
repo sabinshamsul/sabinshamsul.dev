@@ -9,7 +9,8 @@ Personal portfolio website for **Syahmi Shamsul**
 - Inter for text, JetBrains Mono for dates, tags and figures, real bullet lists
 - Recruiter fact sheet in the About section (status, target roles, education, location)
 - Project cards open an in-page detail view with write-up, screenshots and an embedded live demo
-- Fully responsive with an accessible mobile menu, skip link, focus rings and reduced-motion support
+- Motion layer: word-by-word hero entrance, breathing blue glow, staggered scroll reveals, cursor spotlight on cards, count-up stats, scroll progress bar, all disabled under `prefers-reduced-motion`
+- Fully responsive with an accessible mobile menu, skip link and focus rings
 
 ## Tech Stack
 
