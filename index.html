@@ -243,6 +243,53 @@
   .cta-link svg { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
   .cta-link .l { display: inline-flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
+  /* ─── CONTACT FORM ─── */
+  .cta { grid-template-columns: 0.85fr 1.15fr; align-items: start; }
+  .cta-side { display: grid; gap: 24px; }
+  .form { display: grid; gap: 14px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row.name { grid-template-columns: 110px 1fr 1fr; }
+  .form-row.phone { grid-template-columns: 150px 1fr; }
+  .field { display: grid; gap: 6px; min-width: 0; }
+  .field label { font-size: 13px; font-weight: 500; color: var(--ink-muted); }
+  .field label span { color: var(--ink-subtle); font-weight: 400; }
+  .field input, .field select, .field textarea {
+    width: 100%; min-width: 0; height: 40px; padding: 0 12px;
+    background: var(--canvas); color: var(--ink); border: 1px solid var(--hairline); border-radius: var(--r-md);
+    font-family: var(--sans); font-size: 14px; line-height: 1.4; -webkit-appearance: none; appearance: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background-color 0.35s ease;
+  }
+  .field textarea { height: auto; min-height: 132px; padding: 10px 12px; resize: vertical; }
+  .field select { padding-right: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238a8f98' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; cursor: pointer; }
+  .field input::placeholder, .field textarea::placeholder { color: var(--ink-tertiary); }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 25%, transparent); }
+  .field input:user-invalid, .field textarea:user-invalid { border-color: #dc2626; }
+  .field .err { font-size: 12px; color: #f87171; display: none; }
+  [data-theme="light"] .field .err { color: #b91c1c; }
+  .field.invalid .err { display: block; }
+  .field.invalid input, .field.invalid textarea { border-color: #dc2626; }
+  .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+  .form-actions .btn[disabled] { opacity: 0.65; cursor: wait; }
+  .form-note { font-size: 12px; color: var(--ink-subtle); margin-left: auto; }
+  .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+  .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
+  .btn.sending .spinner { display: inline-block; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; z-index: 200; transform: translate(-50%, 24px); opacity: 0;
+    display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 32px);
+    background: var(--surface-2); color: var(--ink); border: 1px solid var(--hairline-strong); border-radius: var(--r-lg);
+    padding: 12px 16px; font-size: 14px; font-weight: 500; box-shadow: 0 20px 40px -20px rgba(0,0,0,0.6);
+    transition: transform 0.4s var(--ease), opacity 0.3s; pointer-events: none;
+  }
+  .toast.show { transform: translate(-50%, 0); opacity: 1; pointer-events: auto; }
+  .toast .ico { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; }
+  .toast.ok .ico { background: var(--success); color: #fff; }
+  .toast.bad .ico { background: #dc2626; color: #fff; }
+  .toast .ico svg { width: 12px; height: 12px; }
+
   /* ─── FOOTER ─── */
   footer { padding: 32px 0 40px; border-top: 1px solid var(--hairline); }
   .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--ink-subtle); }
@@ -440,7 +487,13 @@
     .xp-when .pill { margin-top: 0; }
     .projects, .skills { grid-template-columns: 1fr; }
     .card-foot { flex-direction: column; align-items: flex-start; }
-    .cta { grid-template-columns: 1fr; padding: 28px 20px; gap: 24px; }
+    .cta { grid-template-columns: 1fr; padding: 28px 20px; gap: 28px; }
+    .form-row, .form-row.name, .form-row.phone { grid-template-columns: 1fr; }
+    .form-row.name { grid-template-columns: 110px 1fr; }
+    .form-row.name .field:last-child { grid-column: 1 / -1; }
+    .form-row.phone { grid-template-columns: 140px 1fr; }
+    .form-actions .btn { flex: 1 1 auto; }
+    .form-note { flex-basis: 100%; margin-left: 0; text-align: center; }
     .pd { max-width: 100vw; }
     .pd-frame { max-height: 100dvh; border-radius: 0; border-left: 0; border-right: 0; }
     .pd-head, .pd-body { padding-left: 16px; padding-right: 16px; }
@@ -455,6 +508,7 @@
 <a href="#main" class="skip-link">Skip to content</a>
 
 <canvas class="dust" id="dust" aria-hidden="true"></canvas>
+<div class="toast" id="toast" role="status" aria-live="polite"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 13l4 4L19 7"/></svg></span><span class="msg"></span></div>
 <div class="progress" id="progress" aria-hidden="true"></div>
 <nav aria-label="Primary">
   <div class="container nav-inner">
@@ -682,15 +736,79 @@
 <section id="contact">
   <div class="container">
     <div class="cta reveal">
-      <div>
-        <h2>✉️ Let's talk</h2>
-        <p>Looking for full-time and graduate roles in data science, AI, machine learning or software engineering. Email is the fastest way to reach me.</p>
+      <div class="cta-side">
+        <div>
+          <h2>✉️ Let's talk</h2>
+          <p>Looking for full-time and graduate roles in data science, AI, machine learning or software engineering. Send a message here and it lands straight in my inbox.</p>
+        </div>
+        <div class="cta-links">
+          <a href="mailto:sabin.shamsul@gmail.com" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 2h12.5c.97 0 1.75.78 1.75 1.75v8.5A1.75 1.75 0 0114.25 14H1.75A1.75 1.75 0 010 12.25v-8.5C0 2.78.78 2 1.75 2zm.25 3.19v6.56c0 .14.11.25.25.25h11.5a.25.25 0 00.25-.25V5.19L8.3 9.44a.75.75 0 01-.6 0L1.5 5.19zm0-1.72v.18l6.5 4.12 6.5-4.12v-.18a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25z"/></svg>Email</span><span class="v">sabin.shamsul@gmail.com</span></a>
+          <a href="https://linkedin.com/in/sabinshamsul" target="_blank" rel="noopener" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.63 0H2.37C1.06 0 0 1.06 0 2.37v11.26C0 14.94 1.06 16 2.37 16h11.26C14.94 16 16 14.94 16 13.63V2.37C16 1.06 14.94 0 13.63 0zM4.75 13.63H2.37V6h2.38v7.63zM3.56 5.05c-.77 0-1.39-.62-1.39-1.39S2.8 2.28 3.56 2.28s1.39.62 1.39 1.39-.62 1.38-1.39 1.38zm10.07 8.58h-2.38V9.92c0-.89-.02-2.03-1.24-2.03-1.24 0-1.43.96-1.43 1.96v3.78H6.21V6h2.28v1.05h.03c.32-.6 1.1-1.24 2.26-1.24 2.42 0 2.86 1.59 2.86 3.66v4.16z"/></svg>LinkedIn</span><span class="v">in/sabinshamsul</span></a>
+          <a href="https://github.com/sabinshamsul" target="_blank" rel="noopener" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</span><span class="v">sabinshamsul</span></a>
+        </div>
       </div>
-      <div class="cta-links">
-        <a href="mailto:sabin.shamsul@gmail.com" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 2h12.5c.97 0 1.75.78 1.75 1.75v8.5A1.75 1.75 0 0114.25 14H1.75A1.75 1.75 0 010 12.25v-8.5C0 2.78.78 2 1.75 2zm.25 3.19v6.56c0 .14.11.25.25.25h11.5a.25.25 0 00.25-.25V5.19L8.3 9.44a.75.75 0 01-.6 0L1.5 5.19zm0-1.72v.18l6.5 4.12 6.5-4.12v-.18a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25z"/></svg>Email</span><span class="v">sabin.shamsul@gmail.com</span></a>
-        <a href="https://linkedin.com/in/sabinshamsul" target="_blank" rel="noopener" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M13.63 0H2.37C1.06 0 0 1.06 0 2.37v11.26C0 14.94 1.06 16 2.37 16h11.26C14.94 16 16 14.94 16 13.63V2.37C16 1.06 14.94 0 13.63 0zM4.75 13.63H2.37V6h2.38v7.63zM3.56 5.05c-.77 0-1.39-.62-1.39-1.39S2.8 2.28 3.56 2.28s1.39.62 1.39 1.39-.62 1.38-1.39 1.38zm10.07 8.58h-2.38V9.92c0-.89-.02-2.03-1.24-2.03-1.24 0-1.43.96-1.43 1.96v3.78H6.21V6h2.28v1.05h.03c.32-.6 1.1-1.24 2.26-1.24 2.42 0 2.86 1.59 2.86 3.66v4.16z"/></svg>LinkedIn</span><span class="v">in/sabinshamsul</span></a>
-        <a href="https://github.com/sabinshamsul" target="_blank" rel="noopener" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</span><span class="v">sabinshamsul</span></a>
-      </div>
+
+      <form class="form" id="contactForm" novalidate>
+        <input type="hidden" name="access_key" value="__WEB3FORMS_KEY__">
+        <input type="hidden" name="subject" value="New message from sabinshamsul.dev">
+        <input type="hidden" name="from_name" value="sabinshamsul.dev contact form">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="form-row name">
+          <div class="field">
+            <label for="f-title">Title <span>(optional)</span></label>
+            <select id="f-title" name="title"><option value="">None</option><option>Mr</option><option>Ms</option><option>Mrs</option><option>Dr</option><option>Prof</option></select>
+          </div>
+          <div class="field">
+            <label for="f-first">First name</label>
+            <input id="f-first" name="first_name" type="text" autocomplete="given-name" required placeholder="Aisyah">
+            <span class="err">Please enter your first name.</span>
+          </div>
+          <div class="field">
+            <label for="f-last">Last name</label>
+            <input id="f-last" name="last_name" type="text" autocomplete="family-name" required placeholder="Rahman">
+            <span class="err">Please enter your last name.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" autocomplete="email" required placeholder="you@company.com">
+          <span class="err">Please enter a valid email so I can reply.</span>
+        </div>
+
+        <div class="form-row phone">
+          <div class="field">
+            <label for="f-code">Country code <span>(optional)</span></label>
+            <select id="f-code" name="country_code" autocomplete="tel-country-code">
+              <option value="+60" selected>🇲🇾 +60</option><option value="+65">🇸🇬 +65</option><option value="+62">🇮🇩 +62</option><option value="+66">🇹🇭 +66</option><option value="+63">🇵🇭 +63</option><option value="+84">🇻🇳 +84</option><option value="+673">🇧🇳 +673</option>
+              <option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option>
+              <option value="+86">🇨🇳 +86</option><option value="+852">🇭🇰 +852</option><option value="+886">🇹🇼 +886</option><option value="+81">🇯🇵 +81</option><option value="+82">🇰🇷 +82</option>
+              <option value="+61">🇦🇺 +61</option><option value="+64">🇳🇿 +64</option>
+              <option value="+44">🇬🇧 +44</option><option value="+353">🇮🇪 +353</option><option value="+49">🇩🇪 +49</option><option value="+33">🇫🇷 +33</option><option value="+31">🇳🇱 +31</option><option value="+34">🇪🇸 +34</option><option value="+39">🇮🇹 +39</option><option value="+46">🇸🇪 +46</option><option value="+41">🇨🇭 +41</option>
+              <option value="+1">🇺🇸 +1</option><option value="+55">🇧🇷 +55</option>
+              <option value="+971">🇦🇪 +971</option><option value="+966">🇸🇦 +966</option><option value="+974">🇶🇦 +974</option><option value="+27">🇿🇦 +27</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="f-phone">Phone number <span>(optional)</span></label>
+            <input id="f-phone" name="phone_number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="12 345 6789" pattern="[0-9 \-()]{6,20}">
+            <span class="err">Digits, spaces and dashes only.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="f-msg">Message</label>
+          <textarea id="f-msg" name="message" required minlength="10" placeholder="Hi Syahmi, we have a graduate data role opening in..."></textarea>
+          <span class="err">Please write at least a short message.</span>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" id="sendBtn"><span class="spinner" aria-hidden="true"></span><span class="lbl">Send message</span></button>
+          <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
+          <span class="form-note">Replies go to the email you enter.</span>
+        </div>
+      </form>
     </div>
   </div>
 </section>
@@ -1074,6 +1192,71 @@
 
   if (location.hash.startsWith('#project-')) openProject(location.hash.slice(9));
 
+
+  // Contact form (Web3Forms)
+  (() => {
+    const form = document.getElementById('contactForm');
+    const sendBtn = document.getElementById('sendBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const toast = document.getElementById('toast');
+    let toastTimer = 0;
+    const notify = (msg, ok = true) => {
+      toast.querySelector('.msg').textContent = msg;
+      toast.classList.toggle('ok', ok); toast.classList.toggle('bad', !ok);
+      toast.querySelector('.ico svg path').setAttribute('d', ok ? 'M5 13l4 4L19 7' : 'M6 6l12 12M18 6L6 18');
+      toast.classList.add('show');
+      clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), ok ? 5000 : 7000);
+    };
+    const fields = [...form.querySelectorAll('.field')];
+    const validate = () => {
+      let first = null;
+      fields.forEach(f => {
+        const c = f.querySelector('input, textarea, select');
+        const bad = c && !c.checkValidity();
+        f.classList.toggle('invalid', !!bad);
+        if (bad && !first) first = c;
+      });
+      if (first) first.focus();
+      return !first;
+    };
+    form.addEventListener('input', e => { const f = e.target.closest('.field'); if (f && f.classList.contains('invalid') && e.target.checkValidity()) f.classList.remove('invalid'); });
+    clearBtn.addEventListener('click', () => { form.reset(); fields.forEach(f => f.classList.remove('invalid')); form.querySelector('#f-title').focus(); });
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!validate()) return;
+      const data = Object.fromEntries(new FormData(form).entries());
+      delete data.botcheck;
+      if (!data.access_key || data.access_key.startsWith('__')) { notify('The form is not connected yet. Please email me directly instead.', false); return; }
+      const fullName = [data.title, data.first_name, data.last_name].filter(Boolean).join(' ');
+      const phone = data.phone_number ? `${data.country_code} ${data.phone_number}` : 'not provided';
+      const payload = {
+        access_key: data.access_key,
+        subject: `Portfolio message from ${fullName}`,
+        from_name: fullName,
+        name: fullName,
+        email: data.email,
+        replyto: data.email,
+        phone,
+        message: data.message
+      };
+      sendBtn.disabled = true; sendBtn.classList.add('sending'); sendBtn.querySelector('.lbl').textContent = 'Sending';
+      try {
+        const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
+        const out = await res.json().catch(() => ({}));
+        if (res.ok && out.success) {
+          notify(`Thanks ${data.first_name}, your message has been sent. I will reply to ${data.email}.`);
+          form.reset();
+        } else {
+          notify(out.message || 'Something went wrong sending your message. Please try again or email me directly.', false);
+        }
+      } catch (err) {
+        notify('Could not reach the mail service. Check your connection or email me directly.', false);
+      } finally {
+        sendBtn.disabled = false; sendBtn.classList.remove('sending'); sendBtn.querySelector('.lbl').textContent = 'Send message';
+      }
+    });
+  })();
 
   // Active nav link
   const navItems = document.querySelectorAll('.nav-links a');
