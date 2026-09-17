@@ -158,7 +158,8 @@
   .hero-id-name { font-size: 14px; font-weight: 500; }
   .hero-id-role { font-size: 13px; color: var(--accent); }
   .hero-title { font-size: clamp(38px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.04em; max-width: 20ch; margin-bottom: 24px; }
-  .hero-title span { color: var(--accent); }
+  .hero-title > span { color: var(--accent); }
+  .hero-title .w { color: inherit; }
   .hero-sub { font-size: 18px; line-height: 1.5; color: var(--ink-subtle); max-width: 52ch; margin-bottom: 32px; }
   .hero-sub strong { color: var(--accent-strong); font-weight: 500; }
   .hero-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
@@ -247,7 +248,7 @@
   .cta { grid-template-columns: 0.85fr 1.15fr; align-items: start; }
   .cta-side { display: grid; gap: 24px; }
   .form { display: grid; gap: 14px; }
-  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
   .form-row.name { grid-template-columns: 110px 1fr 1fr; }
   .form-row.phone { grid-template-columns: 150px 1fr; }
   .field { display: grid; gap: 6px; min-width: 0; }
@@ -779,7 +780,7 @@
 
         <div class="form-row phone">
           <div class="field">
-            <label for="f-code">Country code <span>(optional)</span></label>
+            <label for="f-code">Code <span>(optional)</span></label>
             <select id="f-code" name="country_code" autocomplete="tel-country-code">
               <option value="+60" selected>🇲🇾 +60</option><option value="+65">🇸🇬 +65</option><option value="+62">🇮🇩 +62</option><option value="+66">🇹🇭 +66</option><option value="+63">🇵🇭 +63</option><option value="+84">🇻🇳 +84</option><option value="+673">🇧🇳 +673</option>
               <option value="+91">🇮🇳 +91</option><option value="+92">🇵🇰 +92</option><option value="+880">🇧🇩 +880</option><option value="+94">🇱🇰 +94</option>
@@ -791,7 +792,7 @@
             </select>
           </div>
           <div class="field">
-            <label for="f-phone">Phone number <span>(optional)</span></label>
+            <label for="f-phone">Phone <span>(optional)</span></label>
             <input id="f-phone" name="phone_number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="12 345 6789" pattern="[0-9 \-()]{6,20}">
             <span class="err">Digits, spaces and dashes only.</span>
           </div>
