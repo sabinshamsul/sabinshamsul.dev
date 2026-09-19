@@ -387,6 +387,22 @@
     pointer-events: none;
   }
   .lb-bottom .lb-strip { pointer-events: auto; }
+
+  /* Collapse the caption and thumbnails to free the full height */
+  .lb-toggle {
+    pointer-events: auto; width: 46px; height: 28px; border-radius: 999px;
+    background: rgba(10,11,12,0.8); border: 1px solid rgba(255,255,255,0.16);
+    color: #f7f8f8; cursor: pointer; display: grid; place-items: center;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .lb-toggle:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.3); }
+  .lb-toggle:active { transform: scale(0.94); }
+  .lb-toggle svg { width: 16px; height: 16px; transition: transform 0.32s var(--ease); }
+  .lb-frame.info-hidden .lb-toggle svg { transform: rotate(180deg); }
+  .lb-info { display: grid; gap: 10px; justify-items: center; width: 100%; }
+  .lb-frame.info-hidden .lb-info { display: none; }
+  .lb-frame.info-hidden .lb-bottom { background: none; padding-bottom: 12px; }
+  .lb-frame.info-hidden .lb-stage { padding-bottom: 54px; }
   .lb-caption { font-size: 15px; font-weight: 500; text-align: center; max-width: 70ch; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
   .lb-sub { font-size: 13px; color: rgba(247,248,248,0.65); text-align: center; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
   .lb-strip { display: flex; gap: 8px; max-width: min(100%, 900px); overflow-x: auto; padding: 4px; scrollbar-width: thin; scroll-snap-type: x proximity; }
@@ -415,6 +431,7 @@
     .lb-nav { width: 40px; height: 40px; }
     .lb-prev { left: 6px; } .lb-next { right: 6px; }
     .lb-stage { padding: 56px 10px 150px; }
+    .lb-frame.info-hidden .lb-stage { padding-bottom: 48px; }
     .lb-zoom { display: none; }
     .lb-caption { font-size: 14px; }
     .lb-thumb { width: 60px; height: 40px; }
@@ -942,9 +959,14 @@
       <button type="button" class="lb-btn lb-nav lb-next" id="lbNext" aria-label="Next image"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>
     </div>
     <div class="lb-bottom">
-      <p class="lb-caption" id="lbCaption"></p>
-      <p class="lb-sub" id="lbSub"></p>
-      <div class="lb-strip" id="lbStrip"></div>
+      <button type="button" class="lb-toggle" id="lbToggle" aria-expanded="true" aria-controls="lbInfo" aria-label="Hide caption and thumbnails" title="Hide caption (C)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+      </button>
+      <div class="lb-info" id="lbInfo">
+        <p class="lb-caption" id="lbCaption"></p>
+        <p class="lb-sub" id="lbSub"></p>
+        <div class="lb-strip" id="lbStrip"></div>
+      </div>
     </div>
   </div>
 </dialog>
@@ -1415,6 +1437,8 @@
     const countEl = document.getElementById('lbCount');
     const zoomEl = document.getElementById('lbZoom');
     const playBtn = document.getElementById('lbPlay');
+    const frame = document.querySelector('.lb-frame');
+    const toggleBtn = document.getElementById('lbToggle');
     const prevBtn = document.getElementById('lbPrev');
     const nextBtn = document.getElementById('lbNext');
     const SLIDE_MS = 3500;
@@ -1479,6 +1503,16 @@
       timer = setInterval(() => show(idx + 1), SLIDE_MS);
     };
 
+    const setInfo = (visible, remember) => {
+      frame.classList.toggle('info-hidden', !visible);
+      toggleBtn.setAttribute('aria-expanded', String(visible));
+      toggleBtn.setAttribute('aria-label', visible ? 'Hide caption and thumbnails' : 'Show caption and thumbnails');
+      toggleBtn.title = (visible ? 'Hide' : 'Show') + ' caption (C)';
+      if (remember) { try { localStorage.setItem('lbInfo', visible ? '1' : '0'); } catch (e) {} }
+      requestAnimationFrame(() => { clampPan(); apply(); });
+    };
+    toggleBtn.addEventListener('click', () => setInfo(frame.classList.contains('info-hidden'), true));
+
     const open = (list, start, projectTitle) => {
       items = list.map(x => ({ ...x, project: projectTitle }));
       strip.innerHTML = items.map((it, n) =>
@@ -1486,6 +1520,9 @@
       opener = document.activeElement;
       dlg.showModal();
       document.documentElement.style.setProperty('--slide-ms', SLIDE_MS + 'ms');
+      let pref = '1';
+      try { pref = localStorage.getItem('lbInfo') ?? '1'; } catch (e) {}
+      setInfo(pref !== '0', false);
       show(start, true);
     };
 
@@ -1551,6 +1588,7 @@
       else if (k === '-') { e.preventDefault(); zoomTo(scale / 1.25); }
       else if (k === '0') { e.preventDefault(); resetZoom(); }
       else if (k === ' ') { e.preventDefault(); playBtn.click(); }
+      else if (k === 'c' || k === 'C') { e.preventDefault(); toggleBtn.click(); }
     });
     addEventListener('resize', () => { if (dlg.open) { clampPan(); apply(); } });
     return { open };
