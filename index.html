@@ -341,9 +341,13 @@
 
   .lb { border: 0; padding: 0; max-width: 100vw; max-height: 100dvh; width: 100vw; height: 100dvh; background: transparent; overflow: hidden; }
   .lb::backdrop { background: #000; }
-  .lb-frame { position: relative; width: 100vw; height: 100dvh; display: grid; grid-template-rows: auto 1fr auto; background: #0a0b0c; color: #f7f8f8; }
+  .lb-frame { position: relative; width: 100vw; height: 100dvh; background: #0a0b0c; color: #f7f8f8; }
 
-  .lb-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; z-index: 2; }
+  .lb-top {
+    position: absolute; top: 0; left: 0; right: 0; z-index: 3;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px;
+    background: linear-gradient(to bottom, rgba(10,11,12,0.82), rgba(10,11,12,0));
+  }
   .lb-count { font-family: var(--mono); font-size: 13px; color: rgba(247,248,248,0.65); font-variant-numeric: tabular-nums; }
   .lb-tools { display: flex; align-items: center; gap: 6px; }
   .lb-btn {
@@ -357,11 +361,13 @@
   .lb-btn svg { width: 17px; height: 17px; pointer-events: none; }
   .lb-zoom { font-family: var(--mono); font-size: 12px; color: rgba(247,248,248,0.65); min-width: 46px; text-align: center; font-variant-numeric: tabular-nums; }
 
-  .lb-stage { position: relative; overflow: hidden; touch-action: none; display: grid; place-items: center; min-height: 0; }
+  .lb-stage {
+    position: absolute; inset: 0; overflow: hidden; touch-action: none; display: grid; place-items: center;
+    padding: 64px 76px 178px;
+  }
   .lb-img {
-    max-width: 92vw; max-height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-drag: none;
-    transform-origin: center center; transition: transform 0.28s var(--ease); will-change: transform; background: #0f1011;
-    border-radius: var(--r-md);
+    width: 100%; height: 100%; object-fit: contain; display: block; user-select: none; -webkit-user-drag: none;
+    transform-origin: center center; transition: transform 0.28s var(--ease); will-change: transform;
   }
   .lb-img.dragging { transition: none; }
   .lb-stage.zoomed .lb-img { cursor: grab; }
@@ -369,15 +375,22 @@
   .lb-stage:not(.zoomed) .lb-img { cursor: zoom-in; }
 
   .lb-nav {
-    position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
     width: 46px; height: 46px; border-radius: 50%;
   }
   .lb-prev { left: 12px; } .lb-next { right: 12px; }
 
-  .lb-bottom { padding: 14px 16px 20px; display: grid; gap: 12px; justify-items: center; z-index: 2; }
-  .lb-caption { font-size: 15px; font-weight: 500; text-align: center; max-width: 70ch; }
-  .lb-sub { font-size: 13px; color: rgba(247,248,248,0.6); text-align: center; }
+  .lb-bottom {
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 3;
+    padding: 24px 16px 16px; display: grid; gap: 10px; justify-items: center;
+    background: linear-gradient(to top, rgba(10,11,12,0.88) 45%, rgba(10,11,12,0));
+    pointer-events: none;
+  }
+  .lb-bottom .lb-strip { pointer-events: auto; }
+  .lb-caption { font-size: 15px; font-weight: 500; text-align: center; max-width: 70ch; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
+  .lb-sub { font-size: 13px; color: rgba(247,248,248,0.65); text-align: center; text-shadow: 0 1px 6px rgba(0,0,0,0.9); }
   .lb-strip { display: flex; gap: 8px; max-width: min(100%, 900px); overflow-x: auto; padding: 4px; scrollbar-width: thin; scroll-snap-type: x proximity; }
+  .lb-thumb img { background: #0f1011; }
   .lb-strip::-webkit-scrollbar { height: 6px; }
   .lb-strip::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 999px; }
   .lb-thumb {
@@ -401,11 +414,11 @@
     .lb-btn { width: 40px; height: 40px; }
     .lb-nav { width: 40px; height: 40px; }
     .lb-prev { left: 6px; } .lb-next { right: 6px; }
-    .lb-img { max-width: 100vw; }
+    .lb-stage { padding: 56px 10px 150px; }
     .lb-zoom { display: none; }
     .lb-caption { font-size: 14px; }
     .lb-thumb { width: 60px; height: 40px; }
-    .lb-bottom { padding: 10px 10px 16px; gap: 10px; }
+    .lb-bottom { padding: 20px 10px 12px; gap: 8px; }
   }
   @media (prefers-reduced-motion: reduce) {
     .lb-img { transition: none; }
@@ -917,9 +930,9 @@
           <span class="lb-progress" aria-hidden="true"></span>
         </button>
         <button type="button" class="lb-btn" id="lbOut" aria-label="Zoom out"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M20 20l-3.9-3.9"/></svg></button>
-        <span class="lb-zoom" id="lbZoom">100%</span>
+        <span class="lb-zoom" id="lbZoom" title="Zoom level">100%</span>
         <button type="button" class="lb-btn" id="lbIn" aria-label="Zoom in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M8 11h6M11 8v6M20 20l-3.9-3.9"/></svg></button>
-        <button type="button" class="lb-btn" id="lbReset" aria-label="Reset zoom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9V5h4M21 9V5h-4M3 15v4h4M21 15v4h-4"/></svg></button>
+        <button type="button" class="lb-btn" id="lbReset" aria-label="Fit to window" title="Fit to window"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9V5h4M21 9V5h-4M3 15v4h4M21 15v4h-4"/></svg></button>
         <button type="button" class="lb-btn" id="lbClose" aria-label="Close viewer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
     </div>
@@ -1407,25 +1420,25 @@
     const SLIDE_MS = 3500;
 
     let items = [], idx = 0, scale = 1, tx = 0, ty = 0, timer = 0, opener = null;
-    const MIN = 1, MAX = 6;
+    const MIN = 0.25, MAX = 6;
 
     const apply = () => {
       img.style.transform = `translate(${tx}px, ${ty}px) scale(${scale})`;
       zoomEl.textContent = Math.round(scale * 100) + '%';
       stage.classList.toggle('zoomed', scale > 1);
-      document.getElementById('lbOut').disabled = scale <= MIN;
+      document.getElementById('lbOut').disabled = scale <= MIN + 0.001;
       document.getElementById('lbIn').disabled = scale >= MAX;
     };
     const resetZoom = () => { scale = 1; tx = 0; ty = 0; apply(); };
     const clampPan = () => {
       const r = img.getBoundingClientRect(), s = stage.getBoundingClientRect();
-      const ox = Math.max(0, (r.width - s.width) / 2), oy = Math.max(0, (r.height - s.height) / 2);
+      const ox = Math.max(0, (r.width - s.width) / 2 + 24), oy = Math.max(0, (r.height - s.height) / 2 + 24);
       tx = Math.min(ox, Math.max(-ox, tx)); ty = Math.min(oy, Math.max(-oy, ty));
     };
     const zoomTo = (next, cx, cy) => {
       const prev = scale;
       scale = Math.min(MAX, Math.max(MIN, next));
-      if (scale === MIN) { tx = 0; ty = 0; }
+      if (scale <= 1) { tx = 0; ty = 0; }
       else if (cx != null) {
         const r = stage.getBoundingClientRect();
         const dx = cx - r.left - r.width / 2, dy = cy - r.top - r.height / 2;
@@ -1480,8 +1493,8 @@
     prevBtn.addEventListener('click', () => { stop(); show(idx - 1); });
     nextBtn.addEventListener('click', () => { stop(); show(idx + 1); });
     playBtn.addEventListener('click', () => playBtn.classList.contains('playing') ? stop() : play());
-    document.getElementById('lbIn').addEventListener('click', () => zoomTo(scale * 1.5));
-    document.getElementById('lbOut').addEventListener('click', () => zoomTo(scale / 1.5));
+    document.getElementById('lbIn').addEventListener('click', () => zoomTo(scale * 1.25));
+    document.getElementById('lbOut').addEventListener('click', () => zoomTo(scale / 1.25));
     document.getElementById('lbReset').addEventListener('click', resetZoom);
     document.getElementById('lbClose').addEventListener('click', () => dlg.close());
 
@@ -1534,8 +1547,8 @@
       const k = e.key;
       if (k === 'ArrowRight') { e.preventDefault(); stop(); show(idx + 1); }
       else if (k === 'ArrowLeft') { e.preventDefault(); stop(); show(idx - 1); }
-      else if (k === '+' || k === '=') { e.preventDefault(); zoomTo(scale * 1.5); }
-      else if (k === '-') { e.preventDefault(); zoomTo(scale / 1.5); }
+      else if (k === '+' || k === '=') { e.preventDefault(); zoomTo(scale * 1.25); }
+      else if (k === '-') { e.preventDefault(); zoomTo(scale / 1.25); }
       else if (k === '0') { e.preventDefault(); resetZoom(); }
       else if (k === ' ') { e.preventDefault(); playBtn.click(); }
     });
