@@ -86,7 +86,7 @@
   h1, h2, h3 { text-wrap: balance; font-weight: 600; }
   p { text-wrap: pretty; }
   /* Justified descriptions */
-  .hero-sub, .about-text p, .section-lede, .xp-points li, .card-desc, .cta p,
+  .about-text p, .xp-desc, .cta p,
   .pd-section p, .pd-section li, .pd-demo-note { text-align: justify; text-wrap: initial; hyphens: auto; -webkit-hyphens: auto; }
   :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: var(--r-xs); }
 
@@ -152,33 +152,33 @@
   .btn-secondary:hover { background: var(--surface-2); border-color: var(--hairline-strong); }
 
   /* ─── HERO ─── */
-  #hero { padding: 152px 0 96px; }
-  .hero-id { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
-  .hero-id img { width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--hairline-strong); object-fit: cover; }
-  .hero-id-name { font-size: 14px; font-weight: 500; }
-  .hero-id-role { font-size: 13px; color: var(--accent); }
-  .hero-title { font-size: clamp(38px, 6vw, 72px); line-height: 1.05; letter-spacing: -0.04em; max-width: 20ch; margin-bottom: 24px; }
-  .hero-title > span { color: var(--accent); }
+  #hero { padding: clamp(88px, 13vh, 132px) 0 clamp(56px, 11vh, 128px); min-height: 100vh; min-height: 100svh; display: flex; flex-direction: column; justify-content: space-between; }
+  .hero-in { text-align: center; }
+  .hero-name { text-align: center; font-size: clamp(44px, 9vw, 120px); line-height: 1.05; font-weight: 600; letter-spacing: -0.04em; }
+  .hero-name span { color: var(--accent); }
+  .hero-social { display: flex; justify-content: center; gap: clamp(20px, 3vw, 32px); margin-top: clamp(16px, 3vh, 28px); }
+  .hero-social a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--ink-subtle); transition: color 0.15s, transform 0.15s; }
+  .hero-social a:hover { color: var(--ink); transform: translateY(-2px); }
+  .hero-social svg { width: clamp(22px, 1vw + 16px, 28px); height: auto; }
+  .hero-title { font-size: clamp(34px, 7vw, 92px); line-height: 1.05; letter-spacing: -0.04em; max-width: 20ch; margin: 0 auto clamp(12px, 2vh, 20px); }
   .hero-title .w { color: inherit; }
-  .hero-sub { font-size: 18px; line-height: 1.5; color: var(--ink-subtle); max-width: 52ch; margin-bottom: 32px; }
-  .hero-sub strong { color: var(--accent-strong); font-weight: 500; }
-  .hero-ctas { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hero-sub { font-size: clamp(13px, 0.35vw + 11.5px, 16px); font-style: italic; line-height: 1.5; color: var(--ink-subtle); max-width: 44ch; margin: 0 auto; }
 
   /* ─── SECTIONS ─── */
   section { padding: 96px 0; border-top: 1px solid var(--hairline); }
   .section-title { font-size: clamp(28px, 3.2vw, 40px); line-height: 1.15; letter-spacing: -0.025em; margin-bottom: 8px; }
   .section-title.solo { margin-bottom: 40px; }
-  .section-lede { font-size: 16px; color: var(--ink-subtle); max-width: 56ch; margin-bottom: 40px; }
 
   /* ─── ABOUT ─── */
-  .about { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 64px; align-items: start; }
-  .about-text { font-size: 17px; line-height: 1.6; color: var(--ink-muted); max-width: 58ch; }
+  .about { display: grid; gap: 40px; }
+  .about-text { font-size: 17px; line-height: 1.6; color: var(--ink-muted); max-width: 58ch; margin: 0 auto; }
   .about-text p + p { margin-top: 16px; }
 
-  .facts { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); overflow: hidden; }
-  .facts-head { padding: 14px 20px; border-bottom: 1px solid var(--hairline); font-size: 13px; font-weight: 500; color: var(--accent); }
+  .facts { display: grid; grid-template-columns: 1fr 1fr; background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); overflow: hidden; }
+  .facts-head { grid-column: 1 / -1; padding: 14px 20px; border-bottom: 1px solid var(--hairline); font-size: 13px; font-weight: 500; color: var(--accent); }
   .fact { display: grid; grid-template-columns: 104px 1fr; gap: 16px; padding: 14px 20px; border-bottom: 1px solid var(--hairline); font-size: 14px; }
-  .fact:last-child { border-bottom: 0; }
+  .fact:nth-child(even) { border-right: 1px solid var(--hairline); }
+  .fact:nth-last-child(-n+2) { border-bottom: 0; }
   .fact dt { color: var(--ink-subtle); }
   .fact dd { color: var(--ink); line-height: 1.5; }
   .fact dd .mono { font-size: 12.5px; color: var(--ink-subtle); }
@@ -188,50 +188,39 @@
   /* ─── EXPERIENCE ─── */
   .xp-item { display: grid; grid-template-columns: 200px 1fr; gap: 32px; padding: 32px 0; border-top: 1px solid var(--hairline); }
   .xp-item:last-child { border-bottom: 1px solid var(--hairline); }
-  .xp-when { font-family: var(--mono); font-size: 13px; color: var(--accent); padding-top: 4px; }
+  .xp-when { font-family: var(--mono); font-size: 13px; color: var(--ink); padding-top: 4px; }
   .xp-when .pill { display: inline-flex; margin-top: 10px; }
-  .xp-role { font-size: 20px; letter-spacing: -0.015em; line-height: 1.25; }
+  .xp-role { font-size: 20px; letter-spacing: -0.015em; line-height: 1.25; color: var(--accent); }
   .xp-org { font-size: 14px; color: var(--ink-subtle); margin: 4px 0 16px; }
-  .xp-points { list-style: disc; padding-left: 1.2em; display: grid; gap: 8px; max-width: 68ch; }
-  .xp-points li { font-size: 15px; color: var(--ink-muted); line-height: 1.55; padding-left: 4px; }
-  .xp-points li::marker { color: var(--accent); }
-  .xp-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
-  .tag { font-family: var(--mono); font-size: 12px; color: var(--ink-subtle); background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-sm); padding: 3px 8px; white-space: nowrap; }
+  .xp-org .inline-link { color: var(--ink-subtle); font-style: italic; }
+  .xp-org .inline-link:hover { color: var(--ink); }
+  .xp-desc { font-size: 15px; color: var(--ink-muted); line-height: 1.55; max-width: 68ch; }
 
   /* ─── PROJECTS ─── */
-  .projects { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+  .carousel { position: relative; }
+  .projects { --card-w: clamp(220px, 22vw, 290px); position: relative; display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain; scrollbar-width: none; padding: 24px calc(50% - var(--card-w) / 2); }
+  .projects::-webkit-scrollbar { display: none; }
   .card {
-    background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg);
-    display: flex; flex-direction: column; overflow: hidden; cursor: pointer; position: relative;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
-    transition: border-color 0.2s, background 0.2s, transform 0.3s var(--ease);
+    flex: 0 0 var(--card-w); aspect-ratio: 3 / 4; scroll-snap-align: center;
+    position: relative; display: grid; place-items: center; overflow: hidden; cursor: pointer;
+    border-radius: 24px; background: var(--surface-2);
+    /* Record-crate flip: --o is the card's distance from centre, set on scroll */
+    --o: 0; --a: 0;
+    transform: perspective(1000px) rotateY(calc(var(--o) * -38deg)) scale(calc(1 - var(--a) * 0.14));
+    filter: brightness(calc(1 - var(--a) * 0.35));
+    will-change: transform;
   }
-  .card:hover { border-color: var(--hairline-strong); background: var(--surface-2); transform: translateY(-2px); }
-  .card-shot { aspect-ratio: 16 / 9; background: var(--surface-2); border-bottom: 1px solid var(--hairline); overflow: hidden; display: grid; place-items: center; }
-  .card-shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; }
-  .card-shot.logo img { width: 72px; height: 72px; object-fit: contain; }
-  .card-shot.diagram { padding: 24px; }
-  .card-shot.diagram svg { width: 100%; height: 100%; max-height: 150px; }
-  .card-body { padding: 20px 20px 18px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-  .card-kicker { font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 0.02em; }
-  .card-title { font-size: 19px; letter-spacing: -0.015em; line-height: 1.25; }
-  .card-desc { font-size: 14px; color: var(--ink-subtle); line-height: 1.55; flex: 1; }
-  .card-metric { font-family: var(--mono); font-size: 12.5px; color: var(--ink-muted); font-variant-numeric: tabular-nums; margin-top: 4px; }
-  .card-metric b { color: var(--accent-strong); font-weight: 500; }
-  .card-foot { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--hairline); }
-  .card-stack { display: flex; gap: 6px; flex-wrap: wrap; }
-  .card-links { display: flex; gap: 14px; flex-shrink: 0; }
-  .link { font-size: 13px; font-weight: 500; color: var(--ink); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; }
-  .link:hover { color: var(--accent); }
-  .link.live { color: var(--success); }
-  .link.live:hover { color: var(--success); text-decoration: underline; text-underline-offset: 3px; }
-
-  /* ─── SKILLS ─── */
-  .skills { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .skill-group { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-lg); padding: 20px; }
-  .skill-group h3 { font-size: 14px; font-weight: 500; margin-bottom: 12px; }
-  .skill-group h3 span { color: var(--accent); font-weight: 400; font-family: var(--mono); font-size: 12px; margin-left: 8px; }
-  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .card img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s var(--ease); }
+  .card::after { content: ''; position: absolute; inset: 0; background: rgba(8, 9, 10, 0.5); transition: background 0.35s; }
+  .card:hover img, .card:focus-visible img { transform: scale(1.05); }
+  .card:hover::after, .card:focus-visible::after { background: rgba(8, 9, 10, 0.35); }
+  .card-title { position: relative; z-index: 1; padding: 0 24px; text-align: center; color: #fff; font-size: clamp(24px, 1.2vw + 16px, 32px); letter-spacing: -0.02em; line-height: 1.15; text-shadow: 0 2px 16px rgba(0,0,0,0.4); }
+  .car-btn { position: absolute; top: 50%; z-index: 2; width: 44px; height: 44px; margin-top: -22px; display: grid; place-items: center; border: 0; border-radius: 50%; background: rgba(8, 9, 10, 0.55); color: #fff; cursor: pointer; backdrop-filter: blur(6px); transition: opacity 0.2s, background 0.2s; }
+  .car-btn:hover { background: rgba(8, 9, 10, 0.8); }
+  .car-btn:disabled { opacity: 0; pointer-events: none; }
+  .car-btn svg { width: 22px; height: 22px; }
+  .car-prev { left: 12px; }
+  .car-next { right: 12px; }
 
   /* ─── CONTACT ─── */
   .cta { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-xl); padding: 48px; display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 48px; align-items: center; }
@@ -304,17 +293,17 @@
   .pd::backdrop { background: var(--scrim); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
   .pd-frame { background: var(--canvas); color: var(--ink); border: 1px solid var(--hairline-strong); border-radius: var(--r-xl); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; overflow: hidden; }
   .pd-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 20px 24px 16px; border-bottom: 1px solid var(--hairline); }
-  .pd-kicker { font-size: 12px; font-weight: 500; color: var(--accent); margin-bottom: 6px; }
-  .pd-title { font-size: clamp(20px, 2.4vw, 28px); letter-spacing: -0.025em; line-height: 1.2; }
+  .pd-head > div { flex: 1; padding-left: 48px; text-align: center; }
+  .pd-title { font-size: clamp(20px, 2.4vw, 28px); letter-spacing: -0.025em; line-height: 1.2; color: var(--accent); }
   .pd-body { overflow-y: auto; padding: 24px; display: grid; gap: 28px; }
   .pd-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .pd-section h3 { font-size: 13px; font-weight: 500; color: var(--accent); margin-bottom: 10px; }
   .pd-section p { color: var(--ink-muted); max-width: 70ch; font-size: 15px; line-height: 1.6; }
   .pd-section p + p { margin-top: 10px; }
-  .pd-section ul { list-style: disc; padding-left: 1.2em; display: grid; gap: 8px; }
+  .pd-section ol { list-style: decimal; padding-left: 1.4em; display: grid; gap: 14px; }
   .pd-section li { color: var(--ink-muted); padding-left: 4px; max-width: 70ch; font-size: 15px; line-height: 1.55; }
-  .pd-section li::marker { color: var(--accent); }
-  .pd-section li strong { color: var(--ink); font-weight: 500; }
+  .pd-section li::marker { color: var(--accent); font-weight: 500; }
+  .pd-section li strong { display: block; margin-bottom: 2px; color: var(--ink); font-weight: 500; }
   .pd-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 12px; }
   .pd-stats > div { background: var(--surface-1); border: 1px solid var(--hairline); border-radius: var(--r-md); padding: 14px 16px; }
   .pd-stat-num { font-family: var(--mono); font-size: 22px; font-weight: 500; letter-spacing: -0.02em; line-height: 1; font-variant-numeric: tabular-nums; color: var(--accent-strong); }
@@ -328,7 +317,6 @@
   .pd-demo-frame { width: 100%; aspect-ratio: 16 / 10; border: 1px solid var(--hairline); border-radius: var(--r-md); background: var(--surface-1); display: grid; place-items: center; overflow: hidden; }
   .pd-demo-frame iframe { width: 100%; height: 100%; border: 0; display: block; }
   .pd-demo-note { font-size: 13px; color: var(--ink-subtle); }
-  .pd-stack { display: flex; flex-wrap: wrap; gap: 6px; }
 
   /* ─── LIGHTBOX ─── */
   .pd-shots figure { cursor: zoom-in; position: relative; }
@@ -444,8 +432,7 @@
 
   /* ─── MOTION ─── */
   /* Theme change fades instead of snapping */
-  body, nav, .card, .facts, .skill-group, .cta, .tag, .btn-secondary, .cta-link, .pd-frame { transition-property: background-color, border-color, color; transition-duration: 0.35s; transition-timing-function: ease; }
-  .card { transition: background-color 0.35s ease, border-color 0.2s, transform 0.35s var(--ease), box-shadow 0.35s var(--ease); }
+  body, nav, .facts, .cta, .btn-secondary, .cta-link, .pd-frame { transition-property: background-color, border-color, color; transition-duration: 0.35s; transition-timing-function: ease; }
 
   /* Drifting dust, fixed behind everything */
   .dust { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; pointer-events: none; }
@@ -454,18 +441,31 @@
   /* Scroll progress line */
   .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 101; transform-origin: 0 50%; transform: scaleX(0); background: linear-gradient(90deg, var(--primary), var(--accent)); pointer-events: none; }
 
-  /* Hero ambient: faint grid + slow-breathing blue glow, dark canvas only */
+  /* Hero photo: full-bleed portrait washed into the canvas so text stays readable */
   #hero { position: relative; overflow: hidden; }
+  .hero-photo { position: absolute; inset: 0; z-index: 0; pointer-events: none; background: url(hero-photo.jpg) center 20% / cover no-repeat; opacity: 0.35; }
+  .hero-photo::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--canvas) 45%, transparent), transparent 75%),
+                linear-gradient(180deg, color-mix(in srgb, var(--canvas) 40%, transparent) 0%, transparent 35%, transparent 65%, var(--canvas) 100%);
+  }
+  [data-theme="light"] .hero-photo { opacity: 0.6; }
+  [data-theme="light"] .hero-photo::after {
+    background: radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--canvas) 25%, transparent), transparent 75%),
+                linear-gradient(180deg, color-mix(in srgb, var(--canvas) 30%, transparent) 0%, transparent 35%, transparent 60%, var(--canvas) 100%);
+  }
+
+  /* Hero ambient: faint grid + slow-breathing blue glow */
   .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
   .hero-bg::before {
     content: ''; position: absolute; inset: 0;
     background-image: radial-gradient(var(--hairline-strong) 1px, transparent 1px);
     background-size: 28px 28px; opacity: 0.45;
-    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, #000 20%, transparent 70%);
-    mask-image: radial-gradient(ellipse 70% 60% at 30% 40%, #000 20%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 70%);
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 45%, #000 20%, transparent 70%);
   }
   .hero-bg::after {
-    content: ''; position: absolute; width: 720px; height: 720px; left: -160px; top: -120px; border-radius: 50%;
+    content: ''; position: absolute; width: 720px; height: 720px; left: calc(50% - 420px); top: -120px; border-radius: 50%;
     background: radial-gradient(circle, rgba(37,99,235,0.28) 0%, rgba(37,99,235,0) 62%);
     filter: blur(20px); animation: breathe 9s ease-in-out infinite;
   }
@@ -473,16 +473,14 @@
   #hero .container { position: relative; z-index: 1; }
   @keyframes breathe { 0%, 100% { transform: translate(0,0) scale(1); opacity: .9; } 50% { transform: translate(60px,30px) scale(1.12); opacity: 1; } }
 
-  /* Hero entrance: id row, then headline word by word, then sub, then buttons */
+  /* Hero entrance: name, then headline word by word, then sub, then social links */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
   @keyframes wordUp { from { opacity: 0; transform: translateY(0.6em) rotate(1.5deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: blur(0); } }
-  .hero-id, .hero-sub, .hero-ctas { animation: fadeUp 0.7s var(--ease) both; }
-  .hero-id { animation-delay: 0.05s; }
+  .hero-name, .hero-sub, .hero-social { animation: fadeUp 0.7s var(--ease) both; }
+  .hero-name { animation-delay: 0.05s; }
   .hero-sub { animation-delay: 0.55s; }
-  .hero-ctas { animation-delay: 0.7s; }
+  .hero-social { animation-delay: 0.7s; }
   .hero-title .w { display: inline-block; animation: wordUp 0.8s var(--ease) both; animation-delay: calc(0.15s + var(--i) * 0.06s); }
-  .hero-id img { animation: avatarIn 0.9s var(--ease) both; }
-  @keyframes avatarIn { from { transform: scale(0.6); opacity: 0; } to { transform: none; opacity: 1; } }
 
   /* Scroll reveal with per-child stagger */
   .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
@@ -495,24 +493,6 @@
   .section-title::after { content: ''; position: absolute; left: 0; bottom: -6px; height: 2px; width: 40px; background: var(--accent); transform: scaleX(0); transform-origin: 0 50%; transition: transform 0.6s var(--ease) 0.2s; }
   .visible .section-title::after, .section-title.visible::after { transform: scaleX(1); }
 
-  /* Cards: spotlight border under the cursor, image lift, arrow nudge */
-  .card::before {
-    content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; pointer-events: none; opacity: 0;
-    background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(96,165,250,0.55), transparent 60%);
-    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude;
-    transition: opacity 0.3s;
-  }
-  .card:hover::before { opacity: 1; }
-  .card:hover { transform: translateY(-4px); box-shadow: 0 20px 40px -24px rgba(0,0,0,0.6); }
-  [data-theme="light"] .card:hover { box-shadow: 0 20px 40px -24px rgba(15,16,17,0.25); }
-  .card-shot { position: relative; }
-  .card-shot img { transition: transform 0.6s var(--ease); }
-  .card:hover .card-shot img { transform: scale(1.04); }
-  .card-shot::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, var(--surface-1), transparent 55%); opacity: 0; transition: opacity 0.35s; pointer-events: none; }
-  .card:hover .card-shot::after { opacity: 0.5; }
-  .link.live { transition: color 0.15s; }
-  .link .arr, .link.live { position: relative; }
-  .card:hover .link.live { text-decoration: underline; text-underline-offset: 3px; }
 
   /* Buttons: lift and sheen */
   .btn { position: relative; overflow: hidden; }
@@ -522,8 +502,6 @@
   .btn-primary:hover::after { left: 120%; }
 
   /* Tags, fact rows, contact links */
-  .tag { transition: border-color 0.2s, color 0.2s, transform 0.2s var(--ease), background-color 0.35s ease; }
-  .tag:hover { border-color: var(--accent); color: var(--ink); transform: translateY(-1px); }
   .fact { transition: background-color 0.2s; }
   .fact:hover { background: var(--surface-2); }
   .cta-link { transition: border-color 0.2s, background-color 0.2s, transform 0.25s var(--ease); }
@@ -562,10 +540,7 @@
 
   /* Touch: no hover lift, but a press response */
   @media (hover: none) {
-    .card:hover { transform: none; box-shadow: none; }
-    .card:hover .card-shot img { transform: none; }
-    .card::before { display: none; }
-    .card:active { transform: scale(0.99); background: var(--surface-2); }
+    .card:hover img { transform: none; }
     .btn:hover { transform: none; }
     .cta-link:hover { transform: none; }
   }
@@ -580,26 +555,25 @@
   }
 
   /* ─── RESPONSIVE ─── */
-  @media (max-width: 1024px) {
-    .about { grid-template-columns: 1fr; gap: 40px; }
-    .facts { max-width: 560px; }
-  }
   @media (max-width: 768px) {
     .container { padding: 0 16px; }
     section { padding: 64px 0; }
-    #hero { padding: 112px 0 64px; }
+    #hero { padding: clamp(80px, 11vh, 112px) 0 clamp(48px, 9vh, 96px); }
     .nav-hamburger { display: flex; }
     .nav-links { display: none; position: absolute; top: 56px; left: 0; right: 0; flex-direction: column; gap: 0; background: var(--surface-1); border-bottom: 1px solid var(--hairline); padding: 8px; }
     .nav-links.open { display: flex; }
     .nav-links a { padding: 12px; font-size: 15px; }
-    .hero-ctas .btn { flex: 1 1 auto; }
     .fact { grid-template-columns: 1fr; gap: 2px; padding: 12px 16px; }
+    .facts { grid-template-columns: 1fr; }
+    .fact:nth-child(even) { border-right: 0; }
+    .fact:nth-last-child(2) { border-bottom: 1px solid var(--hairline); }
     .facts-head { padding: 12px 16px; }
     .xp-item { grid-template-columns: 1fr; gap: 8px; padding: 24px 0; }
     .xp-when { padding-top: 0; display: flex; align-items: center; gap: 10px; }
     .xp-when .pill { margin-top: 0; }
-    .projects, .skills { grid-template-columns: 1fr; }
-    .card-foot { flex-direction: column; align-items: flex-start; }
+    .projects { --card-w: 60vw; margin: 0 -16px; }
+    .car-prev { left: 4px; }
+    .car-next { right: 4px; }
     .cta { grid-template-columns: 1fr; padding: 28px 20px; gap: 28px; }
     .form-row, .form-row.name, .form-row.phone { grid-template-columns: 1fr; }
     .form-row.name { grid-template-columns: 110px 1fr; }
@@ -627,10 +601,9 @@
   <div class="container nav-inner">
     <a href="#hero" class="nav-logo"><img src="profile-720.jpg" alt="" width="24" height="24">Syahmi Shamsul</a>
     <ul class="nav-links" id="navLinks">
-      <li><a href="#about">About</a></li>
+      <li><a href="#about">About Me</a></li>
       <li><a href="#experience">Experience</a></li>
       <li><a href="#projects">Projects</a></li>
-      <li><a href="#skills">Skills</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
     <div class="nav-actions">
@@ -649,20 +622,16 @@
 
 <!-- HERO -->
 <section id="hero" style="border-top:0">
+  <div class="hero-photo" aria-hidden="true"></div>
   <div class="hero-bg" aria-hidden="true"></div>
+  <p class="container hero-name">Syahmi <span>Shamsul</span></p>
   <div class="container hero-in">
-    <div class="hero-id">
-      <img src="profile-720.jpg" alt="Portrait of Syahmi Shamsul" width="44" height="44" fetchpriority="high">
-      <div>
-        <div class="hero-id-name">Syahmi Shamsul</div>
-        <div class="hero-id-role">Software Engineering &amp; Data Analytics Intern at Cashku · Kuala Lumpur</div>
-      </div>
-    </div>
-    <h1 class="hero-title">Machine learning that <span>makes it to production.</span></h1>
-    <p class="hero-sub">Final-year Computer Science student at Taylor's University, specialising in <strong>Data Science and AI</strong>. I build models, the data work behind them, and the apps that put them in front of people.</p>
-    <div class="hero-ctas">
-      <a href="#projects" class="btn btn-primary">View projects</a>
-      <a href="#contact" class="btn btn-secondary">Get in touch</a>
+    <h1 class="hero-title">Data Science &amp; AI</h1>
+    <p class="hero-sub">Final-year Computer Science student at Taylor's University, specialising in Data Science and AI.</p>
+    <div class="hero-social">
+      <a href="mailto:sabin.shamsul@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+      <a href="https://linkedin.com/in/sabinshamsul" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></svg></a>
+      <a href="https://github.com/sabinshamsul" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a>
     </div>
   </div>
 </section>
@@ -670,22 +639,22 @@
 <!-- ABOUT -->
 <section id="about">
   <div class="container">
-    <h2 class="section-title solo reveal">👋 About</h2>
+    <h2 class="section-title solo reveal">👋 About Me</h2>
     <div class="about reveal stagger">
-      <div class="about-text">
-        <p>I'm a final-year Computer Science student specialising in Data Science with an extension in Artificial Intelligence. I care about the whole path from raw data to something people can use: cleaning and auditing data, training and evaluating models, then deploying them behind real interfaces.</p>
-        <p>Right now I'm a Software Engineering &amp; Data Analytics Intern at Cashku, a Malaysian fintech, where I work on data quality across the platform's fund universe. Before that I led a five-person team building MediVision, a patient flow platform for emergency departments with an XGBoost triage model in production.</p>
-        <p>I'm looking for a full-time or graduate role in data science, AI, machine learning or software engineering.</p>
-      </div>
       <dl class="facts">
-        <div class="facts-head">📌 At a glance</div>
-        <div class="fact"><dt>Status</dt><dd><span class="pill ok">Open to full-time roles</span></dd></div>
-        <div class="fact"><dt>Roles</dt><dd>Data science · AI · Machine learning · Software engineering</dd></div>
+        <div class="facts-head">📌 At a Glance</div>
+        <div class="fact"><dt>Status</dt><dd><span class="pill ok">Open to Full-time Roles</span></dd></div>
+        <div class="fact"><dt>Roles</dt><dd>Data Science · AI · Machine Learning · Software Engineering</dd></div>
         <div class="fact"><dt>Current</dt><dd>Software Engineering &amp; Data Analytics Intern, <a href="https://www.linkedin.com/company/cashku/" target="_blank" rel="noopener" class="inline-link">Cashku</a></dd></div>
         <div class="fact"><dt>Education</dt><dd>Bachelor of Computer Science (Honours), Taylor's University<br><span class="mono">Graduating Feb 2027</span></dd></div>
         <div class="fact"><dt>Location</dt><dd>Kuala Lumpur, Malaysia</dd></div>
         <div class="fact"><dt>Languages</dt><dd>English, Malay</dd></div>
       </dl>
+      <div class="about-text">
+        <p>I'm a final-year Computer Science student specialising in Data Science with an extension in Artificial Intelligence. I care about the whole path from raw data to something people can use: cleaning and auditing data, training and evaluating models, then deploying them behind real interfaces.</p>
+        <p>Right now I'm a Software Engineering &amp; Data Analytics Intern at Cashku, a Malaysian fintech, where I work on data quality across the platform's fund universe. Before that I led a five-person team building MediVision, a patient flow platform for emergency departments with an XGBoost triage model in production.</p>
+        <p>I'm looking for a full-time or graduate role in data science, AI, machine learning or software engineering.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -699,27 +668,16 @@
         <div class="xp-when">Jul 2026 - Present<span class="pill ok">Current</span></div>
         <div>
           <h3 class="xp-role">Software Engineering &amp; Data Analytics Intern</h3>
-          <p class="xp-org"><a href="https://www.linkedin.com/company/cashku/" target="_blank" rel="noopener" class="inline-link">Cashku ↗</a> · Fintech investment platform · Kuala Lumpur</p>
-          <ul class="xp-points">
-            <li>Own data-quality investigations across the platform's fund universe: audit coverage with SQL, trace anomalies to root cause, and turn one-off checks into recurring monitoring</li>
-            <li>Cross-reference internal records against external sources to separate pipeline gaps from genuinely missing data, with findings feeding directly into production fixes</li>
-            <li>Work in a Jira-driven agile team alongside product and engineering: run UAT test cases, write precise tickets, and keep meeting minutes and stakeholder updates</li>
-            <li>Report findings daily to the CTO as plain-language, quantified summaries prioritised by business impact</li>
-          </ul>
-          <div class="xp-tags"><span class="tag">SQL</span><span class="tag">Python</span><span class="tag">Data quality</span><span class="tag">Root-cause analysis</span><span class="tag">Jira</span><span class="tag">UAT</span><span class="tag">Stakeholder comms</span></div>
+          <p class="xp-org"><a href="https://www.linkedin.com/company/cashku/" target="_blank" rel="noopener" class="inline-link">Cashku ↗</a></p>
+          <p class="xp-desc">Cashku is a Malaysian fintech investment platform. I investigate data quality across its fund universe, auditing coverage with SQL and tracing anomalies back to their root cause, then report findings daily to the CTO. My findings feed directly into production fixes, and one-off checks I built now run as recurring monitoring.</p>
         </div>
       </div>
       <div class="xp-item">
         <div class="xp-when">Jan 2026 - Apr 2026</div>
         <div>
-          <h3 class="xp-role">Student Assistant, FitFuel Station research project</h3>
-          <p class="xp-org">Taylor's University · INNOVATE Grant</p>
-          <ul class="xp-points">
-            <li>Coordinated "FitFuel Station", an AI-driven vending device that customises foodstuff to the user</li>
-            <li>Translated software logic, handled project data and validated the nutrition algorithms</li>
-            <li>Kept body-composition inputs, decision engines and AI-controlled dispensing consistent end to end</li>
-          </ul>
-          <div class="xp-tags"><span class="tag">Python</span><span class="tag">Data handling</span><span class="tag">Algorithm validation</span><span class="tag">Research coordination</span></div>
+          <h3 class="xp-role">Student Research Assistant for FitFuel Station</h3>
+          <p class="xp-org"><a href="https://university.taylors.edu.my/" target="_blank" rel="noopener" class="inline-link">Taylor's University ↗</a></p>
+          <p class="xp-desc">FitFuel Station is an AI-driven vending device, funded by Taylor's University's INNOVATE Grant, that customises food to each user's body composition. I coordinated the project, handled its data and validated the nutrition algorithms. The result was a body-composition-to-dispensing pipeline that stayed consistent from end to end.</p>
         </div>
       </div>
     </div>
@@ -729,118 +687,18 @@
 <!-- PROJECTS -->
 <section id="projects">
   <div class="container">
-    <div class="reveal">
-      <h2 class="section-title">🚀 Projects</h2>
-      <p class="section-lede">Six projects, four with live demos. Open any card for the full write-up, screenshots and an embedded demo.</p>
-    </div>
-    <div class="projects reveal stagger">
-
-      <article class="card" data-project="medivision">
-        <div class="card-shot"><img loading="lazy" src="https://raw.githubusercontent.com/sabinshamsul/medivision-dashboard/main/screenshots/triage.png" alt="MediVision AI triage with nurse review"></div>
-        <div class="card-body">
-          <div class="card-kicker">Final Year Project · Full-stack + ML</div>
-          <h3 class="card-title">MediVision: patient flow platform for emergency departments</h3>
-          <p class="card-desc">XGBoost triage classifier served as a microservice, real-time patient tracking and analytics dashboards. Led a team of five and owned the backend and ML integration.</p>
-          <div class="card-foot">
-            <div class="card-stack"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">MongoDB</span><span class="tag">FastAPI</span><span class="tag">XGBoost</span></div>
-            <div class="card-links"><button type="button" class="link open-project" data-project="medivision">Details</button><a href="https://medivision-dashboard.vercel.app/" target="_blank" rel="noopener" class="link live">Live demo ↗</a></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-project="bone">
-        <div class="card-shot"><img loading="lazy" src="https://raw.githubusercontent.com/sabinshamsul/Bone-Fracture-Detection/main/results/gradcam_batch.png" alt="Grad-CAM heatmaps on X-rays"></div>
-        <div class="card-body">
-          <div class="card-kicker">Computer vision · Explainable AI</div>
-          <h3 class="card-title">Bone fracture detection from X-rays</h3>
-          <p class="card-desc">EfficientNetB0 fine-tuned on 4,083 hospital X-rays with CLAHE preprocessing. Grad-CAM shows where the model looks, which also exposed a shortcut-learning issue.</p>
-          <p class="card-metric"><b>86%</b> accuracy · <b>0.89</b> AUC · FracAtlas</p>
-          <div class="card-foot">
-            <div class="card-stack"><span class="tag">TensorFlow</span><span class="tag">OpenCV</span><span class="tag">Grad-CAM</span><span class="tag">Gradio</span></div>
-            <div class="card-links"><button type="button" class="link open-project" data-project="bone">Details</button><a href="https://huggingface.co/spaces/sabinshamsul/bone-fracture-detection" target="_blank" rel="noopener" class="link live">Live demo ↗</a></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-project="rag">
-        <div class="card-shot"><img loading="lazy" src="assets/rag-shot.png" alt="AI-Governance RAG live demo"></div>
-        <div class="card-body">
-          <div class="card-kicker">LLM · Retrieval-augmented generation</div>
-          <h3 class="card-title">RAG over AI-governance law</h3>
-          <p class="card-desc">Question answering over roughly 650 AI laws and policies. Every claim is cited to its source and the system declines when the corpus can't answer. Built without a RAG framework.</p>
-          <p class="card-metric"><b>5,203</b> chunks · FAISS · MiniLM · Gemini</p>
-          <div class="card-foot">
-            <div class="card-stack"><span class="tag">FAISS</span><span class="tag">Embeddings</span><span class="tag">Gemini</span><span class="tag">Python</span></div>
-            <div class="card-links"><button type="button" class="link open-project" data-project="rag">Details</button><a href="https://huggingface.co/spaces/sabinshamsul/rag-ai-governance" target="_blank" rel="noopener" class="link live">Live demo ↗</a></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-project="loan">
-        <div class="card-shot"><img loading="lazy" src="assets/loan/top_15_features.png" alt="Top 15 most important features"></div>
-        <div class="card-body">
-          <div class="card-kicker">Machine learning · Credit risk</div>
-          <h3 class="card-title">Loan repayment risk prediction</h3>
-          <p class="card-desc">Engineered a repayment label and payment-behaviour features from three merged lending datasets, then compared Logistic Regression against Random Forest.</p>
-          <p class="card-metric"><b>0.814</b> AUC · <b>80%</b> bad-loan recall</p>
-          <div class="card-foot">
-            <div class="card-stack"><span class="tag">pandas</span><span class="tag">scikit-learn</span><span class="tag">Plotly</span></div>
-            <div class="card-links"><button type="button" class="link open-project" data-project="loan">Details</button></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-project="kadku">
-        <div class="card-shot"><img loading="lazy" src="assets/kadku-card.png" alt="kadku digital business card"></div>
-        <div class="card-body">
-          <div class="card-kicker">Web · Weekend build</div>
-          <h3 class="card-title">kadku: digital business card</h3>
-          <p class="card-desc">Mobile-first card that puts contact details, LinkedIn and resume behind one QR scan. Bilingual in Malay and English, deployed to a custom domain on every push.</p>
-          <div class="card-foot">
-            <div class="card-stack"><span class="tag">HTML</span><span class="tag">Tailwind</span><span class="tag">GitHub Pages</span></div>
-            <div class="card-links"><button type="button" class="link open-project" data-project="kadku">Details</button><a href="https://kadku.sabinshamsul.dev/" target="_blank" rel="noopener" class="link live">Live site ↗</a></div>
-          </div>
-        </div>
-      </article>
-
-      <article class="card" data-project="plants">
-        <div class="card-shot"><img loading="lazy" src="assets/plants.jpg" alt="Smart plant monitoring prototype with ESP8266, sensors, relay, pump and LCD"></div>
-        <div class="card-body">
-          <div class="card-kicker">IoT · Embedded</div>
-          <h3 class="card-title">Smart monitoring for houseplants</h3>
-          <p class="card-desc">ESP32 and Raspberry Pi prototype that waters plants automatically and tracks moisture, temperature, humidity and soil pH in real time.</p>
-          <div class="card-foot">
-            <div class="card-stack"><span class="tag">ESP32</span><span class="tag">Raspberry Pi</span><span class="tag">Python</span></div>
-            <div class="card-links"><button type="button" class="link open-project" data-project="plants">Details</button><a href="https://wokwi.com/projects/436298272500748289" target="_blank" rel="noopener" class="link live">Simulation ↗</a></div>
-          </div>
-        </div>
-      </article>
-
-    </div>
-  </div>
-</section>
-
-<!-- SKILLS -->
-<section id="skills">
-  <div class="container">
-    <h2 class="section-title solo reveal">🛠️ Skills</h2>
-    <div class="skills reveal stagger">
-      <div class="skill-group">
-        <h3>Languages and data<span>7</span></h3>
-        <div class="skill-tags"><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">R</span><span class="tag">Java</span><span class="tag">pandas</span><span class="tag">NumPy</span><span class="tag">scikit-learn</span></div>
+    <h2 class="section-title solo reveal">🚀 Projects</h2>
+    <div class="carousel reveal">
+      <button type="button" class="car-btn car-prev" aria-label="Previous project" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <div class="projects" id="projectTrack">
+        <article class="card" data-project="medivision" tabindex="0" role="button" aria-label="Open MediVision details"><img loading="lazy" src="https://raw.githubusercontent.com/sabinshamsul/medivision-dashboard/main/screenshots/triage.png" alt="MediVision AI triage with nurse review"><h3 class="card-title">MediVision</h3></article>
+        <article class="card" data-project="bone" tabindex="0" role="button" aria-label="Open Bone Fracture Detection details"><img loading="lazy" src="https://raw.githubusercontent.com/sabinshamsul/Bone-Fracture-Detection/main/results/gradcam_batch.png" alt="Grad-CAM heatmaps on X-rays"><h3 class="card-title">Bone Fracture Detection</h3></article>
+        <article class="card" data-project="rag" tabindex="0" role="button" aria-label="Open RAG over AI Governance details"><img loading="lazy" src="assets/rag-shot.png" alt="AI-Governance RAG live demo"><h3 class="card-title">RAG over AI Governance</h3></article>
+        <article class="card" data-project="loan" tabindex="0" role="button" aria-label="Open Loan Repayment Risk details"><img loading="lazy" src="assets/loan/top_15_features.png" alt="Top 15 most important features"><h3 class="card-title">Loan Repayment Risk</h3></article>
+        <article class="card" data-project="kadku" tabindex="0" role="button" aria-label="Open kadku details"><img loading="lazy" src="assets/kadku-card.png" alt="kadku digital business card"><h3 class="card-title">kadku</h3></article>
+        <article class="card" data-project="plants" tabindex="0" role="button" aria-label="Open Smart Plant Monitoring details"><img loading="lazy" src="assets/plants.jpg" alt="Smart plant monitoring prototype with ESP8266, sensors, relay, pump and LCD"><h3 class="card-title">Smart Plant Monitoring</h3></article>
       </div>
-      <div class="skill-group">
-        <h3>Machine learning<span>8</span></h3>
-        <div class="skill-tags"><span class="tag">Supervised learning</span><span class="tag">Unsupervised learning</span><span class="tag">Classification</span><span class="tag">Regression</span><span class="tag">Clustering</span><span class="tag">Random Forest</span><span class="tag">XGBoost</span><span class="tag">Model evaluation</span></div>
-      </div>
-      <div class="skill-group">
-        <h3>Deep learning and LLMs<span>7</span></h3>
-        <div class="skill-tags"><span class="tag">TensorFlow</span><span class="tag">Keras</span><span class="tag">PyTorch</span><span class="tag">CNN</span><span class="tag">LSTM</span><span class="tag">Transfer learning</span><span class="tag">RAG</span></div>
-      </div>
-      <div class="skill-group">
-        <h3>Engineering and tools<span>10</span></h3>
-        <div class="skill-tags"><span class="tag">React</span><span class="tag">Node.js</span><span class="tag">FastAPI</span><span class="tag">MongoDB</span><span class="tag">Git</span><span class="tag">Jira</span><span class="tag">Gradio</span><span class="tag">Hugging Face</span><span class="tag">Tableau</span><span class="tag">Colab</span></div>
-      </div>
+      <button type="button" class="car-btn car-next" aria-label="Next project"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </div>
   </div>
 </section>
@@ -851,8 +709,8 @@
     <div class="cta reveal">
       <div class="cta-side">
         <div>
-          <h2>✉️ Let's talk</h2>
-          <p>Looking for full-time and graduate roles in data science, AI, machine learning or software engineering. Send a message here and it lands straight in my inbox.</p>
+          <h2>✉️ Let's Connect</h2>
+          <p>Send a message here and it lands straight in my inbox.</p>
         </div>
         <div class="cta-links">
           <a href="mailto:sabin.shamsul@gmail.com" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 2h12.5c.97 0 1.75.78 1.75 1.75v8.5A1.75 1.75 0 0114.25 14H1.75A1.75 1.75 0 010 12.25v-8.5C0 2.78.78 2 1.75 2zm.25 3.19v6.56c0 .14.11.25.25.25h11.5a.25.25 0 00.25-.25V5.19L8.3 9.44a.75.75 0 01-.6 0L1.5 5.19zm0-1.72v.18l6.5 4.12 6.5-4.12v-.18a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25z"/></svg>Email</span><span class="v">sabin.shamsul@gmail.com</span></a>
@@ -976,7 +834,6 @@
   <div class="pd-frame">
     <header class="pd-head">
       <div>
-        <p class="pd-kicker" id="pdKicker"></p>
         <h2 class="pd-title" id="pdTitle"></h2>
       </div>
       <button type="button" class="icon-btn" id="pdClose" aria-label="Close">
@@ -1084,16 +941,33 @@
     new MutationObserver(() => { rgb = isLight() ? '29,78,216' : '147,197,253'; }).observe(root, { attributes: true, attributeFilter: ['data-theme'] });
   })();
 
-  // Card spotlight follows the pointer (desktop only)
-  if (matchMedia('(hover: hover)').matches) {
-    document.querySelectorAll('.card').forEach(card => {
-      card.addEventListener('pointermove', e => {
-        const r = card.getBoundingClientRect();
-        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
-        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+  // Project carousel: cards tilt away from the centre like flipping through records
+  (() => {
+    const track = document.getElementById('projectTrack');
+    const cards = [...track.querySelectorAll('.card')];
+    const prev = document.querySelector('.car-prev'), next = document.querySelector('.car-next');
+    const flat = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const step = () => cards[0].offsetWidth + 8;
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const mid = track.scrollLeft + track.clientWidth / 2;
+      cards.forEach(c => {
+        const o = flat ? 0 : Math.max(-1.5, Math.min(1.5, (c.offsetLeft + c.offsetWidth / 2 - mid) / step()));
+        c.style.setProperty('--o', o.toFixed(3));
+        c.style.setProperty('--a', Math.abs(o).toFixed(3));
+        c.style.zIndex = 10 - Math.round(Math.abs(o) * 4);
       });
-    });
-  }
+      prev.disabled = track.scrollLeft < 4;
+      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
+    };
+    const queue = () => { if (!raf) raf = requestAnimationFrame(update); };
+    prev.addEventListener('click', () => track.scrollBy({ left: -step() }));
+    next.addEventListener('click', () => track.scrollBy({ left: step() }));
+    track.addEventListener('scroll', queue, { passive: true });
+    addEventListener('resize', queue);
+    update();
+  })();
 
   // Count-up for dialog stats
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1119,12 +993,11 @@
   const GH = 'https://raw.githubusercontent.com/sabinshamsul/';
   const PROJECTS = {
     medivision: {
-      kicker: "Final Year Project · Taylor's University · Team of five",
-      title: 'MediVision: smart patient flow platform',
+      title: 'MediVision: Smart Patient Flow Platform',
       links: [
-        { label: 'Open live demo', href: 'https://medivision-dashboard.vercel.app/', primary: true },
-        { label: 'Watch walkthrough', href: 'https://youtu.be/a-wKaxb9S9o' },
-        { label: 'View code', href: 'https://github.com/sabinshamsul/medivision-dashboard' }
+        { label: 'Open Live Demo', href: 'https://medivision-dashboard.vercel.app/', primary: true },
+        { label: 'Watch Walkthrough', href: 'https://youtu.be/a-wKaxb9S9o' },
+        { label: 'View Code', href: 'https://github.com/sabinshamsul/medivision-dashboard' }
       ],
       demo: { src: 'https://medivision-dashboard.vercel.app/', note: 'Hosted on Vercel. If it does not load here, open it in a new tab.' },
       problem: [
@@ -1143,15 +1016,13 @@
         ['medivision-dashboard/main/screenshots/triage.png', 'AI triage with nurse review'],
         ['medivision-dashboard/main/screenshots/tracking.png', 'Patient tracking'],
         ['medivision-dashboard/main/screenshots/analytics.png', 'Analytics']
-      ],
-      stack: ['React', 'Vite', 'Tailwind CSS', 'Recharts', 'Node.js', 'Express', 'Socket.io', 'MongoDB Atlas', 'JWT', 'Python', 'FastAPI', 'XGBoost', 'scikit-learn', 'Vercel', 'Render']
+      ]
     },
     bone: {
-      kicker: 'Computer vision · Explainable AI · Deployed on Hugging Face',
-      title: 'Bone fracture detection with Grad-CAM',
+      title: 'Bone Fracture Detection With Grad-CAM',
       links: [
-        { label: 'Open live demo', href: 'https://huggingface.co/spaces/sabinshamsul/bone-fracture-detection', primary: true },
-        { label: 'View code', href: 'https://github.com/sabinshamsul/Bone-Fracture-Detection' }
+        { label: 'Open Live Demo', href: 'https://huggingface.co/spaces/sabinshamsul/bone-fracture-detection', primary: true },
+        { label: 'View Code', href: 'https://github.com/sabinshamsul/Bone-Fracture-Detection' }
       ],
       demo: { src: 'https://sabinshamsul-bone-fracture-detection.hf.space', note: 'Upload an X-ray of a hand, leg, hip or shoulder to get a prediction and a Grad-CAM heatmap. The Space may take a minute to wake up.' },
       stats: [['86%', 'Overall accuracy'], ['74%', 'Fracture recall'], ['0.89', 'Validation AUC'], ['4,083', 'Hospital X-rays']],
@@ -1171,15 +1042,13 @@
         ['Bone-Fracture-Detection/main/results/gradcam_batch.png', 'Grad-CAM heatmaps on sample X-rays', 'wide'],
         ['Bone-Fracture-Detection/main/results/training_history.png', 'Training history'],
         ['Bone-Fracture-Detection/main/results/confusion_matrix.png', 'Confusion matrix']
-      ],
-      stack: ['Python', 'TensorFlow', 'Keras', 'EfficientNetB0', 'OpenCV', 'CLAHE', 'Grad-CAM', 'Gradio', 'Hugging Face Spaces']
+      ]
     },
     rag: {
-      kicker: 'LLM · Retrieval-augmented generation · Deployed on Hugging Face',
-      title: 'RAG over AI-governance documents',
+      title: 'RAG Over AI-Governance Documents',
       links: [
-        { label: 'Open live demo', href: 'https://huggingface.co/spaces/sabinshamsul/rag-ai-governance', primary: true },
-        { label: 'View code', href: 'https://github.com/sabinshamsul/rag-ai' }
+        { label: 'Open Live Demo', href: 'https://huggingface.co/spaces/sabinshamsul/rag-ai-governance', primary: true },
+        { label: 'View Code', href: 'https://github.com/sabinshamsul/rag-ai' }
       ],
       demo: { src: 'https://sabinshamsul-rag-ai-governance.hf.space', note: 'Ask a question about AI laws or policies. Answers are grounded in the AGORA corpus with citations. Free-tier rate limits apply.' },
       stats: [['~650', 'Laws and policies'], ['5,203', 'Indexed chunks'], ['384', 'Embedding dimensions']],
@@ -1199,14 +1068,12 @@
         ['rag-ai/main/screenshots/06_generation_output.png', 'Grounded answer with citations across jurisdictions', 'wide'],
         ['rag-ai/main/screenshots/04_retrieval_output.png', 'Semantic retrieval matching on meaning'],
         ['rag-ai/main/screenshots/07_generation_output.png', 'Declining when the corpus cannot answer']
-      ],
-      stack: ['Python', 'sentence-transformers', 'FAISS', 'Gemini 2.5 Flash', 'pandas', 'Hugging Face Spaces']
+      ]
     },
     loan: {
-      kicker: 'Machine learning · Credit risk · Lending data',
-      title: 'Loan repayment risk prediction',
+      title: 'Loan Repayment Risk Prediction',
       links: [
-        { label: 'View code and write-up', href: 'https://github.com/sabinshamsul/loan-repayment', primary: true, note: 'private repo' }
+        { label: 'View Code And Write-Up', href: 'https://github.com/sabinshamsul/loan-repayment', primary: true, note: 'private repo' }
       ],
       stats: [['0.814', 'AUC-ROC'], ['80%', 'Bad-loan recall'], ['74%', 'Accuracy'], ['~525k', 'Payment records']],
       problem: [
@@ -1235,14 +1102,12 @@
         ['assets/loan/top_10_reasons_rejected.png', 'Reasons for rejected payments. Insufficient funds dwarfs every other cause', '', true],
         ['assets/loan/distribution_num_payments.png', 'Payments per loan. Most average 17, with a tail beyond 40', '', true],
         ['assets/loan/normal_vs_collection_plan.png', 'Only 2% of payments went through a collection plan', '', true]
-      ],
-      stack: ['Python', 'pandas', 'NumPy', 'scikit-learn', 'Plotly', 'Google Colab']
+      ]
     },
     kadku: {
-      kicker: 'Web · Built over a weekend · Live on a custom domain',
-      title: 'kadku: a digital business card',
+      title: 'kadku: A Digital Business Card',
       links: [
-        { label: 'Open live site', href: 'https://kadku.sabinshamsul.dev/', primary: true }
+        { label: 'Open Live Site', href: 'https://kadku.sabinshamsul.dev/', primary: true }
       ],
       demo: { src: 'https://kadku.sabinshamsul.dev/', note: 'This is the real card. It is designed for a phone screen, so it looks best in the narrow frame.' },
       problem: [
@@ -1255,14 +1120,12 @@
         '<strong>Built for a phone screen.</strong> A mobile-first accordion: each section opens on tap and scrolls the full QR code into view.',
         '<strong>Bilingual.</strong> A toggle switches the whole card between Bahasa Melayu and English.',
         '<strong>Zero maintenance hosting.</strong> Static HTML and Tailwind on GitHub Pages, deployed by GitHub Actions on every push, served from a custom subdomain.'
-      ],
-      stack: ['HTML', 'Tailwind CSS', 'vCard', 'QR codes', 'GitHub Actions', 'GitHub Pages']
+      ]
     },
     plants: {
-      kicker: 'IoT · Embedded systems · Coursework',
-      title: 'Smart monitoring for houseplants',
+      title: 'Smart Monitoring For Houseplants',
       links: [
-        { label: 'Open Wokwi simulation', href: 'https://wokwi.com/projects/436298272500748289', primary: true }
+        { label: 'Open Wokwi Simulation', href: 'https://wokwi.com/projects/436298272500748289', primary: true }
       ],
       problem: [
         'Houseplants die from inconsistent care: overwatered one week, forgotten the next. Soil moisture, temperature, humidity and pH all matter, but none of them are visible without checking by hand.',
@@ -1273,8 +1136,7 @@
         '<strong>Water only when needed.</strong> A relay-driven pump runs when moisture drops below a threshold, so the plant is watered by its actual condition.',
         '<strong>See it in real time.</strong> Readings stream to a Raspberry Pi for logging and monitoring.',
         '<strong>Reproducible.</strong> The circuit and firmware run in the Wokwi simulator, so the build can be inspected and tested without the hardware.'
-      ],
-      stack: ['ESP32', 'Raspberry Pi', 'Python', 'Wokwi']
+      ]
     }
   };
 
@@ -1286,7 +1148,6 @@
   function renderProject(key) {
     const p = PROJECTS[key];
     if (!p) return;
-    document.getElementById('pdKicker').textContent = p.kicker;
     document.getElementById('pdTitle').textContent = p.title;
 
     let html = '<div class="pd-actions">' + p.links.map(l =>
@@ -1297,7 +1158,7 @@
       `<div><div class="pd-stat-num">${esc(n)}</div><div class="pd-stat-label">${esc(l)}</div></div>`).join('') + '</div>';
 
     html += '<div class="pd-section"><h3>Problem</h3>' + p.problem.map(t => `<p>${t}</p>`).join('') + '</div>';
-    html += '<div class="pd-section"><h3>Solution</h3><ul>' + p.solution.map(t => `<li>${t}</li>`).join('') + '</ul></div>';
+    html += '<div class="pd-section"><h3>Solution</h3><ol>' + p.solution.map(t => `<li>${t}</li>`).join('') + '</ol></div>';
 
     if (p.shots) html += '<div class="pd-section"><h3>Screenshots</h3><div class="pd-shots">' + p.shots.map(([src, cap, cls, local]) =>
       `<figure class="${cls || ''}" tabindex="0" role="button" aria-label="Open ${esc(cap)} in viewer"><img loading="lazy" src="${local ? src : GH + src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
@@ -1306,7 +1167,6 @@
       <div class="pd-demo-frame" data-src="${p.demo.src}"><button type="button" class="btn btn-secondary load-demo">Load demo</button></div>
       <p class="pd-demo-note">${esc(p.demo.note)}</p></div>`;
 
-    html += '<div class="pd-section"><h3>Stack</h3><div class="pd-stack">' + p.stack.map(t => `<span class="tag">${esc(t)}</span>`).join('') + '</div></div>';
 
     pdBody.innerHTML = html;
     pdBody.scrollTop = 0;
@@ -1352,9 +1212,9 @@
   });
 
   document.querySelectorAll('.card').forEach(card => {
-    card.addEventListener('click', e => {
-      if (e.target.closest('a')) return;
-      openProject(card.dataset.project);
+    card.addEventListener('click', () => openProject(card.dataset.project));
+    card.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openProject(card.dataset.project); }
     });
   });
 
