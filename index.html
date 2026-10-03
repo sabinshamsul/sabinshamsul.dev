@@ -160,9 +160,10 @@
   .hero-social a { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; color: var(--ink-subtle); transition: color 0.15s, transform 0.15s; }
   .hero-social a:hover { color: var(--ink); transform: translateY(-2px); }
   .hero-social svg { width: clamp(22px, 1vw + 16px, 28px); height: auto; }
-  .hero-title { font-size: clamp(34px, 7vw, 92px); line-height: 1.05; letter-spacing: -0.04em; max-width: 20ch; margin: 0 auto clamp(12px, 2vh, 20px); }
-  .hero-title .w { color: inherit; }
   .hero-sub { font-size: clamp(13px, 0.35vw + 11.5px, 16px); font-style: italic; line-height: 1.5; color: var(--ink-subtle); max-width: 44ch; margin: 0 auto; }
+  .hero-sub > span { white-space: nowrap; }
+  .hero-sub a { color: inherit; text-decoration: underline; text-decoration-color: color-mix(in srgb, currentColor 40%, transparent); text-underline-offset: 3px; }
+  .hero-sub a:hover { text-decoration-color: currentColor; }
 
   /* ─── SECTIONS ─── */
   section { padding: 96px 0; border-top: 1px solid var(--hairline); }
@@ -191,7 +192,7 @@
   .xp-when { font-family: var(--mono); font-size: 13px; color: var(--ink); padding-top: 4px; }
   .xp-when .pill { display: inline-flex; margin-top: 10px; }
   .xp-role { font-size: 20px; letter-spacing: -0.015em; line-height: 1.25; color: var(--accent); }
-  .xp-org { font-size: 14px; color: var(--ink-subtle); margin: 4px 0 16px; }
+  .xp-org { font-size: 14px; font-style: italic; color: var(--ink-subtle); margin: 4px 0 16px; }
   .xp-org .inline-link { color: var(--ink-subtle); font-style: italic; }
   .xp-org .inline-link:hover { color: var(--ink); }
   .xp-desc { font-size: 15px; color: var(--ink-muted); line-height: 1.55; max-width: 68ch; }
@@ -473,14 +474,12 @@
   #hero .container { position: relative; z-index: 1; }
   @keyframes breathe { 0%, 100% { transform: translate(0,0) scale(1); opacity: .9; } 50% { transform: translate(60px,30px) scale(1.12); opacity: 1; } }
 
-  /* Hero entrance: name, then headline word by word, then sub, then social links */
+  /* Hero entrance: name, then sub, then social links */
   @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
-  @keyframes wordUp { from { opacity: 0; transform: translateY(0.6em) rotate(1.5deg); filter: blur(4px); } to { opacity: 1; transform: none; filter: blur(0); } }
   .hero-name, .hero-sub, .hero-social { animation: fadeUp 0.7s var(--ease) both; }
   .hero-name { animation-delay: 0.05s; }
-  .hero-sub { animation-delay: 0.55s; }
-  .hero-social { animation-delay: 0.7s; }
-  .hero-title .w { display: inline-block; animation: wordUp 0.8s var(--ease) both; animation-delay: calc(0.15s + var(--i) * 0.06s); }
+  .hero-sub { animation-delay: 0.25s; }
+  .hero-social { animation-delay: 0.4s; }
 
   /* Scroll reveal with per-child stagger */
   .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s var(--ease), transform 0.7s var(--ease); }
@@ -624,10 +623,9 @@
 <section id="hero" style="border-top:0">
   <div class="hero-photo" aria-hidden="true"></div>
   <div class="hero-bg" aria-hidden="true"></div>
-  <p class="container hero-name">Syahmi <span>Shamsul</span></p>
+  <h1 class="container hero-name">Syahmi <span>Shamsul</span></h1>
   <div class="container hero-in">
-    <h1 class="hero-title">Data Science &amp; AI</h1>
-    <p class="hero-sub">Final-year Computer Science student at Taylor's University, specialising in Data Science and AI.</p>
+    <p class="hero-sub"><span>Final-year CS student at Taylor's</span> · <span>Intern at <a href="https://www.linkedin.com/company/cashku/" target="_blank" rel="noopener">Cashku</a></span> · <span>Founder of SABS Dataworks</span></p>
     <div class="hero-social">
       <a href="mailto:sabin.shamsul@gmail.com" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
       <a href="https://linkedin.com/in/sabinshamsul" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M8 11v5M8 8v.01M12 16v-5M16 16v-3a2 2 0 0 0-4 0"/></svg></a>
@@ -644,15 +642,16 @@
       <dl class="facts">
         <div class="facts-head">📌 At a Glance</div>
         <div class="fact"><dt>Status</dt><dd><span class="pill ok">Open to Full-time Roles</span></dd></div>
-        <div class="fact"><dt>Roles</dt><dd>Data Science · AI · Machine Learning · Software Engineering</dd></div>
+        <div class="fact"><dt>Looking For</dt><dd>Data Science · AI · Machine Learning · Software Engineering</dd></div>
         <div class="fact"><dt>Current</dt><dd>Software Engineering &amp; Data Analytics Intern, <a href="https://www.linkedin.com/company/cashku/" target="_blank" rel="noopener" class="inline-link">Cashku</a></dd></div>
-        <div class="fact"><dt>Education</dt><dd>Bachelor of Computer Science (Honours), Taylor's University<br><span class="mono">Graduating Feb 2027</span></dd></div>
+        <div class="fact"><dt>Education</dt><dd>Bachelor of Computer Science (Honours), <a href="https://university.taylors.edu.my/" target="_blank" rel="noopener" class="inline-link">Taylor's University</a><br><span class="mono">Graduating Feb 2027</span></dd></div>
         <div class="fact"><dt>Location</dt><dd>Kuala Lumpur, Malaysia</dd></div>
         <div class="fact"><dt>Languages</dt><dd>English, Malay</dd></div>
       </dl>
       <div class="about-text">
         <p>I'm a final-year Computer Science student specialising in Data Science with an extension in Artificial Intelligence. I care about the whole path from raw data to something people can use: cleaning and auditing data, training and evaluating models, then deploying them behind real interfaces.</p>
-        <p>Right now I'm a Software Engineering &amp; Data Analytics Intern at Cashku, a Malaysian fintech, where I work on data quality across the platform's fund universe. Before that I led a five-person team building MediVision, a patient flow platform for emergency departments with an XGBoost triage model in production.</p>
+        <p>Right now I'm a Software Engineering &amp; Data Analytics Intern at Cashku, a Malaysian fintech, where I work on data quality across the platform's fund universe. For my final year project, I led a five-person team building MediVision, a patient flow platform for hospital emergency departments, with a deployed XGBoost model that recommends triage levels.</p>
+        <p>I also run SABS Dataworks (SSM 202503332957), a side business providing data and analytics consultancy that helps businesses address their data challenges.</p>
         <p>I'm looking for a full-time or graduate role in data science, AI, machine learning or software engineering.</p>
       </div>
     </div>
@@ -678,6 +677,14 @@
           <h3 class="xp-role">Student Research Assistant for FitFuel Station</h3>
           <p class="xp-org"><a href="https://university.taylors.edu.my/" target="_blank" rel="noopener" class="inline-link">Taylor's University ↗</a></p>
           <p class="xp-desc">FitFuel Station is an AI-driven vending device, funded by Taylor's University's INNOVATE Grant, that customises food to each user's body composition. I coordinated the project, handled its data and validated the nutrition algorithms. The result was a body-composition-to-dispensing pipeline that stayed consistent from end to end.</p>
+        </div>
+      </div>
+      <div class="xp-item">
+        <div class="xp-when">Dec 2025 - Present<span class="pill ok">Current</span></div>
+        <div>
+          <h3 class="xp-role">Founder</h3>
+          <p class="xp-org">SABS Dataworks</p>
+          <p class="xp-desc">SABS Dataworks is my registered side business for data and analytics consultancy. I am still exploring practical ways to help businesses tackle their data challenges, from messy datasets to dashboards they can act on.</p>
         </div>
       </div>
     </div>
@@ -869,12 +876,6 @@
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 
-  // Hero headline: split into words for the staggered entrance
-  const h1 = document.querySelector('.hero-title');
-  let wi = 0;
-  h1.innerHTML = h1.innerHTML.replace(/(<span>)?([^<\s]+)(<\/span>)?/g, (m, open, word, close) =>
-    `${open || ''}<span class="w" style="--i:${wi++}">${word}</span>${close || ''}`);
-
   // Scroll reveal (staggered children get an index)
   document.querySelectorAll('.stagger').forEach(g => [...g.children].forEach((c, i) => c.style.setProperty('--i', i)));
   const revealObserver = new IntersectionObserver(entries => {
@@ -997,7 +998,7 @@
       links: [
         { label: 'Open Live Demo', href: 'https://medivision-dashboard.vercel.app/', primary: true },
         { label: 'Watch Walkthrough', href: 'https://youtu.be/a-wKaxb9S9o' },
-        { label: 'View Code', href: 'https://github.com/sabinshamsul/medivision-dashboard' }
+        { label: 'GitHub', href: 'https://github.com/sabinshamsul/medivision-dashboard' }
       ],
       demo: { src: 'https://medivision-dashboard.vercel.app/', note: 'Hosted on Vercel. If it does not load here, open it in a new tab.' },
       problem: [
@@ -1022,7 +1023,7 @@
       title: 'Bone Fracture Detection With Grad-CAM',
       links: [
         { label: 'Open Live Demo', href: 'https://huggingface.co/spaces/sabinshamsul/bone-fracture-detection', primary: true },
-        { label: 'View Code', href: 'https://github.com/sabinshamsul/Bone-Fracture-Detection' }
+        { label: 'GitHub', href: 'https://github.com/sabinshamsul/Bone-Fracture-Detection' }
       ],
       demo: { src: 'https://sabinshamsul-bone-fracture-detection.hf.space', note: 'Upload an X-ray of a hand, leg, hip or shoulder to get a prediction and a Grad-CAM heatmap. The Space may take a minute to wake up.' },
       stats: [['86%', 'Overall accuracy'], ['74%', 'Fracture recall'], ['0.89', 'Validation AUC'], ['4,083', 'Hospital X-rays']],
@@ -1048,7 +1049,7 @@
       title: 'RAG Over AI-Governance Documents',
       links: [
         { label: 'Open Live Demo', href: 'https://huggingface.co/spaces/sabinshamsul/rag-ai-governance', primary: true },
-        { label: 'View Code', href: 'https://github.com/sabinshamsul/rag-ai' }
+        { label: 'GitHub', href: 'https://github.com/sabinshamsul/rag-ai' }
       ],
       demo: { src: 'https://sabinshamsul-rag-ai-governance.hf.space', note: 'Ask a question about AI laws or policies. Answers are grounded in the AGORA corpus with citations. Free-tier rate limits apply.' },
       stats: [['~650', 'Laws and policies'], ['5,203', 'Indexed chunks'], ['384', 'Embedding dimensions']],
@@ -1073,7 +1074,7 @@
     loan: {
       title: 'Loan Repayment Risk Prediction',
       links: [
-        { label: 'View Code And Write-Up', href: 'https://github.com/sabinshamsul/loan-repayment', primary: true, note: 'private repo' }
+        { label: 'GitHub', href: 'https://github.com/sabinshamsul/loan-repayment', primary: true, note: 'private repo' }
       ],
       stats: [['0.814', 'AUC-ROC'], ['80%', 'Bad-loan recall'], ['74%', 'Accuracy'], ['~525k', 'Payment records']],
       problem: [
