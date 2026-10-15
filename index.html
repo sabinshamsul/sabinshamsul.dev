@@ -1269,7 +1269,13 @@
       e.preventDefault();
       if (!validate()) return;
       const data = Object.fromEntries(new FormData(form).entries());
-      delete data.botcheck;
+      // Honeypot: people never see this box, bots that fill every field tick it.
+      // Show the normal success message so the bot learns nothing, but send nothing.
+      if ('botcheck' in data) {
+        notify(`Thanks ${data.first_name}, your message has been sent. I will reply to ${data.email}.`);
+        form.reset();
+        return;
+      }
       if (!data.access_key || data.access_key.startsWith('__')) { notify('The form is not connected yet. Please email me directly instead.', false); return; }
       const fullName = [data.title, data.first_name, data.last_name].filter(Boolean).join(' ');
       const phone = data.phone_number ? `${data.country_code} ${data.phone_number}` : 'not provided';
