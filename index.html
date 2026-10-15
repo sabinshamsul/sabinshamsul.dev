@@ -1045,7 +1045,7 @@
         { label: 'Open Live Demo', href: 'https://huggingface.co/spaces/sabinshamsul/bone-fracture-detection', primary: true },
         { label: 'GitHub', href: 'https://github.com/sabinshamsul/Bone-Fracture-Detection' }
       ],
-      demo: { src: 'https://sabinshamsul-bone-fracture-detection.hf.space', note: 'Upload an X-ray of a hand, leg, hip or shoulder to get a prediction and a Grad-CAM heatmap. The Space may take a minute to wake up.' },
+      demo: { src: 'https://sabinshamsul-bone-fracture-detection.hf.space', allow: 'camera; clipboard-read', note: 'Upload an X-ray of a hand, leg, hip or shoulder to get a prediction and a Grad-CAM heatmap. The Space may take a minute to wake up.' },
       stats: [['86%', 'Overall accuracy'], ['74%', 'Fracture recall'], ['0.89', 'Validation AUC'], ['4,083', 'Hospital X-rays']],
       problem: [
         'Fractures are easy to miss on X-rays, especially subtle ones, and a second reader is not always available. A classifier alone is not enough in a clinical setting: if it cannot show why it flagged an image, no one can check it.',
@@ -1185,7 +1185,7 @@
       `<figure class="${cls || ''}" tabindex="0" role="button" aria-label="Open ${esc(cap)} in viewer"><img loading="lazy" src="${local ? src : GH + src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
 
     if (p.demo) html += `<div class="pd-section pd-demo"><h3>Try it here</h3>
-      <div class="pd-demo-frame" data-src="${p.demo.src}"><button type="button" class="btn btn-secondary load-demo">Load demo</button></div>
+      <div class="pd-demo-frame" data-src="${p.demo.src}" data-allow="${p.demo.allow || ''}"><button type="button" class="btn btn-secondary load-demo">Load demo</button></div>
       <p class="pd-demo-note">${esc(p.demo.note)}</p></div>`;
 
 
@@ -1227,14 +1227,18 @@
     const frame = btn.closest('.pd-demo-frame');
     const iframe = document.createElement('iframe');
     // Demos are third-party apps, so sandbox them. They keep what they use (scripts, their
-    // own storage, uploads, links opening in a new tab, downloads), but never get
-    // allow-top-navigation, so a compromised demo cannot redirect this tab. allow-same-origin
-    // only gives a demo its own origin (vercel.app, hf.space), never this page's.
+    // own storage, form submits, links opening in a new tab, downloads), but never get
+    // allow-top-navigation, so a compromised demo cannot redirect this tab.
+    // allow-same-origin keeps each demo on its own origin (vercel.app, hf.space,
+    // kadku.sabinshamsul.dev) instead of an opaque one. All of those are cross-origin to this
+    // page, which is why allow-scripts + allow-same-origin cannot strip the sandbox here.
     iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads';
     iframe.referrerPolicy = 'no-referrer';
+    // Browser features are granted per demo: copy buttons everywhere, plus whatever a demo's
+    // inputs need (the X-ray demo can take a photo or a pasted image).
+    iframe.allow = ['clipboard-write', frame.dataset.allow].filter(Boolean).join('; ');
     iframe.src = frame.dataset.src;
     iframe.title = 'Live demo';
-    iframe.allow = 'clipboard-write';
     frame.replaceChildren(iframe);
   });
 
