@@ -1226,6 +1226,12 @@
     if (!btn) return;
     const frame = btn.closest('.pd-demo-frame');
     const iframe = document.createElement('iframe');
+    // Demos are third-party apps, so sandbox them. They keep what they use (scripts, their
+    // own storage, uploads, links opening in a new tab, downloads), but never get
+    // allow-top-navigation, so a compromised demo cannot redirect this tab. allow-same-origin
+    // only gives a demo its own origin (vercel.app, hf.space), never this page's.
+    iframe.sandbox = 'allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-downloads';
+    iframe.referrerPolicy = 'no-referrer';
     iframe.src = frame.dataset.src;
     iframe.title = 'Live demo';
     iframe.allow = 'clipboard-write';
