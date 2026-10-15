@@ -259,6 +259,9 @@
   [data-theme="light"] .field .err { color: #b91c1c; }
   .field.invalid .err { display: block; }
   .field.invalid input, .field.invalid textarea { border-color: #dc2626; }
+  .captcha { display: grid; gap: 6px; min-height: 78px; min-width: 0; }
+  .captcha .err { font-size: 12px; color: #f87171; display: none; }
+  .captcha.invalid .err { display: block; }
   .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
   .form-actions .btn[disabled] { opacity: 0.65; cursor: wait; }
   .form-note { font-size: 12px; color: var(--ink-subtle); margin-left: auto; }
@@ -790,6 +793,11 @@
           <span class="err">Please write at least a short message.</span>
         </div>
 
+        <div class="captcha" id="captcha">
+          <div id="captchaWidget"></div>
+          <span class="err" id="captchaErr" role="alert">Please complete the spam check.</span>
+        </div>
+
         <div class="form-actions">
           <button type="submit" class="btn btn-primary" id="sendBtn"><span class="spinner" aria-hidden="true"></span><span class="lbl">Send message</span></button>
           <button type="button" class="btn btn-secondary" id="clearBtn">Clear form</button>
@@ -1262,8 +1270,52 @@
     const topic = form.querySelector('#f-topic'), msg = form.querySelector('#f-msg');
     const syncTopic = () => { msg.placeholder = topic.selectedOptions[0].dataset.placeholder; };
     topic.addEventListener('change', syncTopic);
+
+    // hCaptcha via Web3Forms' free shared sitekey. Web3Forms checks the token server
+    // side once hCaptcha is switched on in its dashboard, which stops scripts that post
+    // straight to the API. Loaded only when the form is near, so most visitors never
+    // fetch it, and redrawn to match the site theme until it is solved.
+    const captchaBox = document.getElementById('captcha'), captchaErr = document.getElementById('captchaErr');
+    const CAPTCHA_MSG = captchaErr.textContent;
+    let widget = null, widgetSize = '', captchaFailed = false;
+    // The normal widget is a fixed 303px wide; use the compact one where that would overflow.
+    const fitSize = () => (captchaBox.clientWidth < 304 ? 'compact' : 'normal');
+    const captchaToken = () => (widget !== null && window.hcaptcha ? hcaptcha.getResponse(widget) : '');
+    const resetCaptcha = () => { if (widget !== null && window.hcaptcha) hcaptcha.reset(widget); };
+    const renderCaptcha = () => {
+      const el = document.getElementById('captchaWidget');
+      if (widget !== null) hcaptcha.remove(widget);
+      widgetSize = fitSize();
+      widget = hcaptcha.render(el, {
+        sitekey: '50b2fe65-b00b-4b9e-ad62-3ba471098be2',
+        theme: document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark',
+        size: widgetSize,
+        callback: () => captchaBox.classList.remove('invalid')
+      });
+    };
+    window.onHcaptchaLoad = renderCaptcha;
+    const loadCaptcha = () => {
+      if (loadCaptcha.done) return; loadCaptcha.done = true;
+      const s = document.createElement('script');
+      s.src = 'https://js.hcaptcha.com/1/api.js?render=explicit&onload=onHcaptchaLoad&recaptchacompat=off';
+      s.async = true;
+      s.onerror = () => {
+        captchaFailed = true;
+        captchaErr.textContent = 'The spam check could not load (an ad blocker may be stopping it). Please email me directly at sabin.shamsul@gmail.com.';
+        captchaBox.classList.add('invalid');
+      };
+      document.head.appendChild(s);
+    };
+    new IntersectionObserver((entries, io) => {
+      if (entries.some(en => en.isIntersecting)) { loadCaptcha(); io.disconnect(); }
+    }, { rootMargin: '600px 0px' }).observe(form);
+    form.addEventListener('focusin', loadCaptcha);
+    // Redraw for a new theme or width, but never throw away a solved check.
+    const redraw = () => { if (window.hcaptcha && widget !== null && !captchaToken()) renderCaptcha(); };
+    new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    new ResizeObserver(() => { if (widget !== null && fitSize() !== widgetSize) redraw(); }).observe(captchaBox);
     form.addEventListener('reset', () => setTimeout(syncTopic));
-    clearBtn.addEventListener('click', () => { form.reset(); fields.forEach(f => f.classList.remove('invalid')); form.querySelector('#f-title').focus(); });
+    clearBtn.addEventListener('click', () => { form.reset(); fields.forEach(f => f.classList.remove('invalid')); if (!captchaFailed) captchaBox.classList.remove('invalid'); resetCaptcha(); form.querySelector('#f-title').focus(); });
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
@@ -1301,6 +1353,13 @@
       // control characters can still come out empty or too short after cleaning.
       const empty = [['#f-first', first], ['#f-last', last], ['#f-msg', message.length >= 10]].find(([, ok]) => !ok);
       if (empty) { const el = form.querySelector(empty[0]); el.closest('.field').classList.add('invalid'); el.focus(); return; }
+      // Spam check must be solved; its token is single-use, so it is reset after every attempt.
+      const token = captchaToken();
+      if (!token) {
+        if (!captchaFailed) { captchaErr.textContent = CAPTCHA_MSG; loadCaptcha(); }
+        captchaBox.classList.add('invalid'); captchaBox.scrollIntoView({ block: 'center', behavior: 'smooth' });
+        return;
+      }
       const fullName = [title, first, last].filter(Boolean).join(' ');
       const phone = phoneNo ? `${code} ${phoneNo}`.trim() : 'not provided';
       const payload = {
@@ -1312,7 +1371,8 @@
         replyto: email,
         phone,
         topic: topicVal,
-        message
+        message,
+        'h-captcha-response': token
       };
       sendBtn.disabled = true; sendBtn.classList.add('sending'); sendBtn.querySelector('.lbl').textContent = 'Sending';
       try {
@@ -1328,6 +1388,7 @@
         notify('Could not reach the mail service. Check your connection or email me directly.', false);
       } finally {
         sendBtn.disabled = false; sendBtn.classList.remove('sending'); sendBtn.querySelector('.lbl').textContent = 'Send message';
+        resetCaptcha();
       }
     });
   })();
