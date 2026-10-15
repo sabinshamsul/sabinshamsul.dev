@@ -3,18 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<!-- Security policy. GitHub Pages cannot send headers, so these live here; frame-ancestors
-     and HSTS need real headers and are not possible on this host.
+<!-- Security policy. GitHub Pages does not let us set response headers, so these live here;
+     frame-ancestors and HSTS need real headers and are not possible on this host.
      Scripts come only from main.js and hCaptcha, never inline. Inline styles stay allowed.
-     When adding a font, image host, demo, API or embed, add its origin to the matching line. -->
+     The form never submits natively (main.js sends it), so form-action is 'none'.
+     When adding a font, image host, demo, API or embed, add its origin to the matching line.
+     GitHub Pages caches each file for about 10 minutes, so a change that needs this page and
+     main.js to update together should use a new main.js?v=N to avoid a stale pairing. -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self';
   script-src 'self' https://hcaptcha.com https://*.hcaptcha.com;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://hcaptcha.com https://*.hcaptcha.com;
   font-src https://fonts.gstatic.com;
-  img-src 'self' data: https://raw.githubusercontent.com;
+  img-src 'self' data: https://raw.githubusercontent.com/sabinshamsul/;
   connect-src https://api.web3forms.com https://hcaptcha.com https://*.hcaptcha.com;
   frame-src https://hcaptcha.com https://*.hcaptcha.com https://medivision-dashboard.vercel.app https://sabinshamsul-bone-fracture-detection.hf.space https://sabinshamsul-rag-ai-governance.hf.space https://kadku.sabinshamsul.dev;
-  object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests">
+  object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <title>Syahmi Shamsul - Data Science & AI</title>
 
@@ -744,7 +747,7 @@
         </div>
       </div>
 
-      <form class="form" id="contactForm" novalidate>
+      <form class="form" id="contactForm" method="post" novalidate>
         <input type="hidden" name="access_key" value="fc742362-ee39-41b2-9f84-104c0e333b30">
         <input type="hidden" name="subject" value="New message from sabinshamsul.dev">
         <input type="hidden" name="from_name" value="sabinshamsul.dev contact form">
