@@ -771,7 +771,7 @@
           <div class="field">
             <label for="f-phone">Phone <span>(optional)</span></label>
             <input id="f-phone" name="phone_number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="12 345 6789" pattern="[0-9 \(\)\-]{6,20}">
-            <span class="err">Digits, spaces and dashes only.</span>
+            <span class="err">Digits, spaces, dashes and brackets only.</span>
           </div>
         </div>
 
@@ -1269,11 +1269,11 @@
       e.preventDefault();
       if (!validate()) return;
       const data = Object.fromEntries(new FormData(form).entries());
-      const sent = () => notify(`Thanks ${data.first_name}, your message has been sent. I will reply to ${data.email}.`);
+      const sent = (name, mail) => notify(`Thanks ${name}, your message has been sent. I will reply to ${mail}.`);
       // Honeypot: people never see this box, bots that fill every field tick it.
       // Show the normal success message so the bot learns nothing, but send nothing.
       if ('botcheck' in data) {
-        sent();
+        sent(data.first_name, data.email);
         form.reset();
         return;
       }
@@ -1282,25 +1282,36 @@
       // one-line fields lose line breaks and control characters (they end up in email
       // headers), and every field is length-capped. Web3Forms still sees whatever a
       // script sends it directly, so this guards the page, not the API.
-      const oneLine = (v, max) => String(v || '').replace(/[\u0000-\u001F\u007F\u2028\u2029]+/g, ' ').trim().slice(0, max);
+      // Caps count characters, not UTF-16 units, so an emoji is never cut in half.
+      const cap = (s, n) => { const a = [...s]; return a.length > n ? a.slice(0, n).join('') : s; };
+      // One-line fields: control characters, line/paragraph separators, and invisible or
+      // bidi characters that can spoof a subject all become a space. ZWJ and ZWNJ
+      // (U+200C/U+200D) stay, since emoji sequences and some names need them.
+      const oneLine = (v, max) => cap(String(v || '').replace(/[\p{Cc}\p{Zl}\p{Zp}\u00ad\u061c\u200b\u200e\u200f\u202a-\u202e\u2060-\u2064\u2066-\u2069\ufeff]+/gu, ' ').replace(/\s+/g, ' ').trim(), max).trim();
+      // Message: keep tabs and line breaks, drop other control and bidi characters.
+      const msgClean = v => cap(String(v || '').replace(/(?![\t\n\r])[\p{Cc}\u202a-\u202e\u2066-\u2069\ufeff]/gu, '').trim(), 5000).trim();
       const pick = (sel, v, fallback) => [...form.querySelector(sel).options].some(o => o.value === v) ? v : fallback;
       const title = pick('#f-title', data.title, '');
-      const topic = pick('#f-topic', data.topic, 'Something else');
+      const topicVal = pick('#f-topic', data.topic, 'Something else');
       const code = pick('#f-code', data.country_code, '');
       const first = oneLine(data.first_name, 50), last = oneLine(data.last_name, 50);
       const email = oneLine(data.email, 254), phoneNo = oneLine(data.phone_number, 20);
-      const message = String(data.message || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 5000);
+      const message = msgClean(data.message);
+      // Validation saw the raw values; a name of only spaces or a message padded with
+      // control characters can still come out empty or too short after cleaning.
+      const empty = [['#f-first', first], ['#f-last', last], ['#f-msg', message.length >= 10]].find(([, ok]) => !ok);
+      if (empty) { const el = form.querySelector(empty[0]); el.closest('.field').classList.add('invalid'); el.focus(); return; }
       const fullName = [title, first, last].filter(Boolean).join(' ');
       const phone = phoneNo ? `${code} ${phoneNo}`.trim() : 'not provided';
       const payload = {
         access_key: data.access_key,
-        subject: `[${topic}] Portfolio message from ${fullName}`,
+        subject: `[${topicVal}] Portfolio message from ${fullName}`,
         from_name: fullName,
         name: fullName,
         email,
         replyto: email,
         phone,
-        topic,
+        topic: topicVal,
         message
       };
       sendBtn.disabled = true; sendBtn.classList.add('sending'); sendBtn.querySelector('.lbl').textContent = 'Sending';
@@ -1308,7 +1319,7 @@
         const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
         const out = await res.json().catch(() => ({}));
         if (res.ok && out.success) {
-          sent();
+          sent(first, email);
           form.reset();
         } else {
           notify(out.message || 'Something went wrong sending your message. Please try again or email me directly.', false);
