@@ -290,28 +290,33 @@ const PROJECTS = {
 const dialog = document.getElementById('projectDialog');
 const pdBody = document.getElementById('pdBody');
 let lastFocus = null;
-const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+// Escape for both text and quoted attributes, so a value can never close an attribute early.
+const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+// Only PROJECTS' own keys count: a link like #project-constructor or #project-__proto__
+// would otherwise match inherited properties and crash the rest of this script.
+const hasProject = key => Object.hasOwn(PROJECTS, key);
 
 function renderProject(key) {
+  if (!hasProject(key)) return;
   const p = PROJECTS[key];
-  if (!p) return;
   document.getElementById('pdTitle').textContent = p.title;
 
   let html = '<div class="pd-actions">' + p.links.map(l =>
-    `<a class="btn ${l.primary ? 'btn-primary' : 'btn-secondary'}" href="${l.href}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`
+    `<a class="btn ${l.primary ? 'btn-primary' : 'btn-secondary'}" href="${esc(l.href)}" target="_blank" rel="noopener">${esc(l.label)} ↗</a>`
   ).join('') + '</div>';
 
   if (p.stats) html += '<div class="pd-stats">' + p.stats.map(([n, l]) =>
     `<div><div class="pd-stat-num">${esc(n)}</div><div class="pd-stat-label">${esc(l)}</div></div>`).join('') + '</div>';
 
+  // Problem and solution text is trusted HTML written in PROJECTS above (it uses <strong>), so it is not escaped.
   html += '<div class="pd-section"><h3>Problem</h3>' + p.problem.map(t => `<p>${t}</p>`).join('') + '</div>';
   html += '<div class="pd-section"><h3>Solution</h3><ol>' + p.solution.map(t => `<li>${t}</li>`).join('') + '</ol></div>';
 
   if (p.shots) html += '<div class="pd-section"><h3>Screenshots</h3><div class="pd-shots">' + p.shots.map(([src, cap, cls, local]) =>
-    `<figure class="${cls || ''}" tabindex="0" role="button" aria-label="Open ${esc(cap)} in viewer"><img loading="lazy" src="${local ? src : GH + src}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
+    `<figure class="${esc(cls || '')}" tabindex="0" role="button" aria-label="Open ${esc(cap)} in viewer"><img loading="lazy" src="${esc(local ? src : GH + src)}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
 
   if (p.demo) html += `<div class="pd-section pd-demo"><h3>Try it here</h3>
-    <div class="pd-demo-frame" data-src="${p.demo.src}" data-allow="${p.demo.allow || ''}"><button type="button" class="btn btn-secondary load-demo">Load demo</button></div>
+    <div class="pd-demo-frame" data-src="${esc(p.demo.src)}" data-allow="${esc(p.demo.allow || '')}"><button type="button" class="btn btn-secondary load-demo">Load demo</button></div>
     <p class="pd-demo-note">${esc(p.demo.note)}</p></div>`;
 
 
@@ -324,7 +329,7 @@ function renderProject(key) {
 }
 
 function openProject(key) {
-  if (!PROJECTS[key]) return;
+  if (!hasProject(key)) return;
   lastFocus = document.activeElement;
   renderProject(key);
   dialog.showModal();
@@ -642,7 +647,7 @@ const LB = (() => {
   const open = (list, start, projectTitle) => {
     items = list.map(x => ({ ...x, project: projectTitle }));
     strip.innerHTML = items.map((it, n) =>
-      `<button type="button" class="lb-thumb" data-n="${n}" aria-label="Go to image ${n + 1}"><img src="${it.src}" alt=""></button>`).join('');
+      `<button type="button" class="lb-thumb" data-n="${n}" aria-label="Go to image ${n + 1}"><img src="${esc(it.src)}" alt=""></button>`).join('');
     opener = document.activeElement;
     dlg.showModal();
     document.documentElement.style.setProperty('--slide-ms', SLIDE_MS + 'ms');
