@@ -294,7 +294,8 @@ let lastFocus = null;
 const esc = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 // Only PROJECTS' own keys count: a link like #project-constructor or #project-__proto__
 // would otherwise match inherited properties and crash the rest of this script.
-const hasProject = key => Object.hasOwn(PROJECTS, key);
+// (hasOwnProperty.call rather than Object.hasOwn, which older iPhones lack.)
+const hasProject = key => Object.prototype.hasOwnProperty.call(PROJECTS, key);
 
 function renderProject(key) {
   if (!hasProject(key)) return;
@@ -313,7 +314,8 @@ function renderProject(key) {
   html += '<div class="pd-section"><h3>Solution</h3><ol>' + p.solution.map(t => `<li>${t}</li>`).join('') + '</ol></div>';
 
   if (p.shots) html += '<div class="pd-section"><h3>Screenshots</h3><div class="pd-shots">' + p.shots.map(([src, cap, cls, local]) =>
-    `<figure class="${esc(cls || '')}" tabindex="0" role="button" aria-label="Open ${esc(cap)} in viewer"><img loading="lazy" src="${esc(local ? src : GH + src)}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
+    `<figure class="${esc(cls || '')}" tabindex="0" role="button" aria-label="Open ${esc(cap)} in viewer">` +
+    `<img loading="lazy" src="${esc(local ? src : GH + src)}" alt="${esc(cap)}"><figcaption>${esc(cap)}</figcaption></figure>`).join('') + '</div></div>';
 
   if (p.demo) html += `<div class="pd-section pd-demo"><h3>Try it here</h3>
     <div class="pd-demo-frame" data-src="${esc(p.demo.src)}" data-allow="${esc(p.demo.allow || '')}"><button type="button" class="btn btn-secondary load-demo">Load demo</button></div>
@@ -380,7 +382,10 @@ document.querySelectorAll('.card').forEach(card => {
   });
 });
 
-if (location.hash.startsWith('#project-')) openProject(location.hash.slice(9));
+// A deep link must never stop the rest of this file (contact form, viewer, nav) from running.
+if (location.hash.startsWith('#project-')) {
+  try { openProject(location.hash.slice(9)); } catch (err) { console.error('Could not open project from link', err); }
+}
 
 
 // Contact form (Web3Forms)
