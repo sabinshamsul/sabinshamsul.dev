@@ -730,7 +730,7 @@
         <input type="hidden" name="access_key" value="fc742362-ee39-41b2-9f84-104c0e333b30">
         <input type="hidden" name="subject" value="New message from sabinshamsul.dev">
         <input type="hidden" name="from_name" value="sabinshamsul.dev contact form">
-        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" inert>
 
         <div class="form-row name">
           <div class="field">
@@ -1269,7 +1269,14 @@
       e.preventDefault();
       if (!validate()) return;
       const data = Object.fromEntries(new FormData(form).entries());
-      delete data.botcheck;
+      const sent = () => notify(`Thanks ${data.first_name}, your message has been sent. I will reply to ${data.email}.`);
+      // Honeypot: people never see this box, bots that fill every field tick it.
+      // Show the normal success message so the bot learns nothing, but send nothing.
+      if ('botcheck' in data) {
+        sent();
+        form.reset();
+        return;
+      }
       if (!data.access_key || data.access_key.startsWith('__')) { notify('The form is not connected yet. Please email me directly instead.', false); return; }
       const fullName = [data.title, data.first_name, data.last_name].filter(Boolean).join(' ');
       const phone = data.phone_number ? `${data.country_code} ${data.phone_number}` : 'not provided';
@@ -1289,7 +1296,7 @@
         const res = await fetch('https://api.web3forms.com/submit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, body: JSON.stringify(payload) });
         const out = await res.json().catch(() => ({}));
         if (res.ok && out.success) {
-          notify(`Thanks ${data.first_name}, your message has been sent. I will reply to ${data.email}.`);
+          sent();
           form.reset();
         } else {
           notify(out.message || 'Something went wrong sending your message. Please try again or email me directly.', false);
