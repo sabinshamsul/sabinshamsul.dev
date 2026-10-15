@@ -739,19 +739,19 @@
           </div>
           <div class="field">
             <label for="f-first">First name</label>
-            <input id="f-first" name="first_name" type="text" autocomplete="given-name" required placeholder="Aisyah">
+            <input id="f-first" name="first_name" type="text" autocomplete="given-name" required maxlength="50" placeholder="Aisyah">
             <span class="err">Please enter your first name.</span>
           </div>
           <div class="field">
             <label for="f-last">Last name</label>
-            <input id="f-last" name="last_name" type="text" autocomplete="family-name" required placeholder="Rahman">
+            <input id="f-last" name="last_name" type="text" autocomplete="family-name" required maxlength="50" placeholder="Rahman">
             <span class="err">Please enter your last name.</span>
           </div>
         </div>
 
         <div class="field">
           <label for="f-email">Your email <span>(so I can reply)</span></label>
-          <input id="f-email" name="email" type="email" autocomplete="email" required placeholder="name@company.com">
+          <input id="f-email" name="email" type="email" autocomplete="email" required maxlength="254" placeholder="name@company.com">
           <span class="err">Please enter a valid email address.</span>
         </div>
 
@@ -770,7 +770,7 @@
           </div>
           <div class="field">
             <label for="f-phone">Phone <span>(optional)</span></label>
-            <input id="f-phone" name="phone_number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="12 345 6789" pattern="[0-9 \-()]{6,20}">
+            <input id="f-phone" name="phone_number" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="12 345 6789" pattern="[0-9 \(\)\-]{6,20}">
             <span class="err">Digits, spaces and dashes only.</span>
           </div>
         </div>
@@ -786,7 +786,7 @@
 
         <div class="field">
           <label for="f-msg">Message</label>
-          <textarea id="f-msg" name="message" required minlength="10" placeholder="Hi Syahmi, we have a graduate data role opening in..."></textarea>
+          <textarea id="f-msg" name="message" required minlength="10" maxlength="5000" placeholder="Hi Syahmi, we have a graduate data role opening in..."></textarea>
           <span class="err">Please write at least a short message.</span>
         </div>
 
@@ -1278,18 +1278,30 @@
         return;
       }
       if (!data.access_key || data.access_key.startsWith('__')) { notify('The form is not connected yet. Please email me directly instead.', false); return; }
-      const fullName = [data.title, data.first_name, data.last_name].filter(Boolean).join(' ');
-      const phone = data.phone_number ? `${data.country_code} ${data.phone_number}` : 'not provided';
+      // Clean what leaves the browser: dropdowns must be one of their own options,
+      // one-line fields lose line breaks and control characters (they end up in email
+      // headers), and every field is length-capped. Web3Forms still sees whatever a
+      // script sends it directly, so this guards the page, not the API.
+      const oneLine = (v, max) => String(v || '').replace(/[\u0000-\u001F\u007F\u2028\u2029]+/g, ' ').trim().slice(0, max);
+      const pick = (sel, v, fallback) => [...form.querySelector(sel).options].some(o => o.value === v) ? v : fallback;
+      const title = pick('#f-title', data.title, '');
+      const topic = pick('#f-topic', data.topic, 'Something else');
+      const code = pick('#f-code', data.country_code, '');
+      const first = oneLine(data.first_name, 50), last = oneLine(data.last_name, 50);
+      const email = oneLine(data.email, 254), phoneNo = oneLine(data.phone_number, 20);
+      const message = String(data.message || '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, 5000);
+      const fullName = [title, first, last].filter(Boolean).join(' ');
+      const phone = phoneNo ? `${code} ${phoneNo}`.trim() : 'not provided';
       const payload = {
         access_key: data.access_key,
-        subject: `[${data.topic}] Portfolio message from ${fullName}`,
+        subject: `[${topic}] Portfolio message from ${fullName}`,
         from_name: fullName,
         name: fullName,
-        email: data.email,
-        replyto: data.email,
+        email,
+        replyto: email,
         phone,
-        topic: data.topic,
-        message: data.message
+        topic,
+        message
       };
       sendBtn.disabled = true; sendBtn.classList.add('sending'); sendBtn.querySelector('.lbl').textContent = 'Sending';
       try {
