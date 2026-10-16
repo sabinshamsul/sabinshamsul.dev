@@ -486,6 +486,16 @@
     background: radial-gradient(ellipse 60% 50% at 50% 50%, color-mix(in srgb, var(--canvas) 25%, transparent), transparent 75%),
                 linear-gradient(180deg, color-mix(in srgb, var(--canvas) 30%, transparent) 0%, transparent 35%, transparent 60%, var(--canvas) 100%);
   }
+  /* Screens wider than tall: "cover" would stretch the square photo to the full width and show only a
+     zoomed-in slice. Instead size it to the hero's height, centre it, and fade its sides into the page. */
+  @media (min-aspect-ratio: 1/1) {
+    .hero-photo {
+      inset: 0 auto; left: 50%; width: auto; height: 100%; aspect-ratio: 1 / 1; transform: translateX(-50%);
+      background-position: center;
+      -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+      mask-image: linear-gradient(90deg, transparent 0%, #000 22%, #000 78%, transparent 100%);
+    }
+  }
 
   /* Hero ambient: faint grid + slow-breathing blue glow */
   .hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; }
