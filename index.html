@@ -309,6 +309,8 @@
   .footer-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 13px; color: var(--ink-subtle); }
   .footer-inner a { color: var(--ink-subtle); text-decoration: none; }
   .footer-inner a:hover { color: var(--ink); }
+  /* Centred block, justified lines; the last line is centred so a short final line doesn't hug the left */
+  .footer-legal { max-width: 72ch; margin: 12px auto 0; font-size: 11px; font-style: italic; line-height: 1.5; color: var(--ink-subtle); text-align: justify; text-align-last: center; hyphens: auto; -webkit-hyphens: auto; }
   .inline-link { color: var(--accent); text-decoration: none; }
   .inline-link:hover { text-decoration: underline; text-underline-offset: 3px; }
 
@@ -712,7 +714,7 @@
         <div>
           <h3 class="xp-role">Founder</h3>
           <p class="xp-org">SABS Dataworks · SSM 202503332957 (003801896-T)</p>
-          <p class="xp-desc">SABS Dataworks is my registered side business for data and analytics consultancy. I am still exploring practical ways to help businesses tackle their data challenges, from messy datasets to dashboards they can act on.</p>
+          <p class="xp-desc">SABS Dataworks is a data and analytics consultancy that I own and operate as a sole proprietor, registered with Suruhanjaya Syarikat Malaysia (SSM). I am still exploring practical ways to help businesses and solo entrepreneurs tackle their data challenges, from messy datasets to dashboards they can act on.</p>
         </div>
       </div>
     </div>
@@ -841,6 +843,7 @@
     <div>Syahmi Shamsul · 2026</div>
     <a href="#hero">Back to top ↑</a>
   </div>
+  <div class="container"><p class="footer-legal">SABS Dataworks is the trading name of Syahmi Amin bin Shamsul, a sole proprietor registered with Suruhanjaya Syarikat Malaysia (SSM Reg. No. 202503332957 (003801896-T)).</p></div>
 </footer>
 
 <!-- IMAGE LIGHTBOX -->
