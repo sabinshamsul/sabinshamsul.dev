@@ -431,8 +431,13 @@ if (location.hash.startsWith('#project-') && !root.classList.contains('framed'))
   const captchaBox = document.getElementById('captcha'), captchaErr = document.getElementById('captchaErr');
   const CAPTCHA_MSG = captchaErr.textContent, EXPIRED_MSG = 'The spam check expired. Please tick it again.';
   let widget = null, widgetSize = '', captchaFailed = false, challengeOpen = false, captchaScript = null;
-  // The normal widget is a fixed 303px wide; use the compact one where that would overflow.
-  const fitSize = () => (captchaBox.clientWidth < 304 ? 'compact' : 'normal');
+  // The normal widget is a fixed 303px wide; use the compact one where it would overflow the
+  // inside of its framed box (width minus the box's padding).
+  const captchaFrame = document.getElementById('captchaFrame');
+  const fitSize = () => {
+    const cs = getComputedStyle(captchaFrame);
+    return captchaFrame.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight) < 304 ? 'compact' : 'normal';
+  };
   const captchaToken = () => (widget !== null && window.hcaptcha ? hcaptcha.getResponse(widget) : '');
   const resetCaptcha = () => { if (widget !== null && window.hcaptcha) hcaptcha.reset(widget); };
   // Replacing the message's content each time makes role="alert" announce it again.
@@ -484,7 +489,7 @@ if (location.hash.startsWith('#project-') && !root.classList.contains('framed'))
   // Redraw for a new theme or width, but never throw away a solved or open check.
   const redraw = () => { if (window.hcaptcha && widget !== null && !challengeOpen && !captchaToken()) renderCaptcha(); };
   new MutationObserver(redraw).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-  new ResizeObserver(() => { if (widget !== null && fitSize() !== widgetSize) redraw(); }).observe(captchaBox);
+  new ResizeObserver(() => { if (widget !== null && fitSize() !== widgetSize) redraw(); }).observe(captchaFrame);
   form.addEventListener('reset', () => setTimeout(syncTopic));
   clearBtn.addEventListener('click', () => { form.reset(); fields.forEach(f => f.classList.remove('invalid')); if (!captchaFailed) captchaBox.classList.remove('invalid'); resetCaptcha(); form.querySelector('#f-title').focus(); });
 
