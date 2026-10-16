@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Security policy. GitHub Pages does not let us set response headers, so these live here;
-     frame-ancestors and HSTS need real headers and are not possible on this host.
+     frame-ancestors and HSTS need real headers and are not possible on this host, so
+     frame-guard.js blocks framing itself (see html.framed below).
      Scripts come only from main.js and hCaptcha, never inline. Inline styles stay allowed.
      The form never submits natively (main.js sends it), so form-action is 'none'.
      When adding a font, image host, demo, API or embed, add its origin to the matching line.
@@ -19,6 +20,7 @@
   frame-src https://hcaptcha.com https://*.hcaptcha.com https://medivision-dashboard.vercel.app https://sabinshamsul-bone-fracture-detection.hf.space https://sabinshamsul-rag-ai-governance.hf.space https://kadku.sabinshamsul.dev;
   object-src 'none'; base-uri 'none'; form-action 'none'; upgrade-insecure-requests">
 <meta name="referrer" content="strict-origin-when-cross-origin">
+<script src="frame-guard.js?v=1"></script>
 <title>Syahmi Shamsul - Data Science & AI</title>
 
 <meta property="og:type" content="website">
@@ -608,6 +610,11 @@
     .pd-demo-frame { aspect-ratio: 4 / 5; }
     .pd-actions .btn { flex: 1 1 auto; }
   }
+  /* Clickjacking guard: frame-guard.js adds .framed when this page is inside a frame. Hide the page
+     (dialogs included, even in the top layer) and show only the link to open it directly. */
+  html.framed body > * { display: none !important; }
+  html.framed body > .framed-notice { display: block !important; margin: 0; padding: 48px 24px; text-align: center; font: 500 16px/1.5 var(--sans); }
+  html.framed .framed-notice a { color: var(--accent); }
 </style>
 </head>
 <body>
@@ -887,6 +894,6 @@
   </div>
 </dialog>
 
-<script src="main.js"></script>
+<script src="main.js?v=3"></script>
 </body>
 </html>

@@ -383,7 +383,8 @@ document.querySelectorAll('.card').forEach(card => {
 });
 
 // A deep link must never stop the rest of this file (contact form, viewer, nav) from running.
-if (location.hash.startsWith('#project-')) {
+// Framed pages stay hidden (frame-guard.js), so a modal there would only make the notice inert.
+if (location.hash.startsWith('#project-') && !root.classList.contains('framed')) {
   try { openProject(location.hash.slice(9)); } catch (err) { console.error('Could not open project from link', err); }
 }
 
