@@ -258,6 +258,8 @@
   /* ─── CONTACT FORM ─── */
   .cta { grid-template-columns: 0.85fr 1.15fr; align-items: start; }
   .cta-side { display: grid; gap: 24px; }
+  /* One short line: justifying it only stretches the gaps between words */
+  .cta .cta-lede { text-align: left; }
   .form { display: grid; gap: 14px; }
   .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: end; }
   .form-row.name { grid-template-columns: 110px 1fr 1fr; }
@@ -288,9 +290,9 @@
   .captcha .err:focus { outline: none; }
   /* Inside the captcha box: a centred block, justified, with the last line centred */
   .captcha-note { width: 100%; max-width: 48ch; margin: 0 auto; font-size: 12px; color: var(--ink-subtle); line-height: 1.5; text-align: justify; text-align-last: center; hyphens: auto; -webkit-hyphens: auto; }
-  .form-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+  .form-actions { display: flex; gap: 10px; align-items: center; justify-content: center; flex-wrap: wrap; margin-top: 4px; }
   .form-actions .btn[disabled] { opacity: 0.65; cursor: wait; }
-  .form-note { font-size: 12px; color: var(--ink-subtle); margin-left: auto; }
+  .form-note { flex-basis: 100%; font-size: 12px; color: var(--ink-subtle); text-align: center; }
   .hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
   .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; display: none; }
   .btn.sending .spinner { display: inline-block; }
@@ -764,7 +766,7 @@
       <div class="cta-side">
         <div>
           <h2>✉️ Let's Connect</h2>
-          <p>Send a message here and it lands straight in my inbox.</p>
+          <p class="cta-lede">Send a message here and it lands straight in my inbox.</p>
         </div>
         <div class="cta-links">
           <a href="mailto:sabin.shamsul@gmail.com" class="cta-link"><span class="l"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.75 2h12.5c.97 0 1.75.78 1.75 1.75v8.5A1.75 1.75 0 0114.25 14H1.75A1.75 1.75 0 010 12.25v-8.5C0 2.78.78 2 1.75 2zm.25 3.19v6.56c0 .14.11.25.25.25h11.5a.25.25 0 00.25-.25V5.19L8.3 9.44a.75.75 0 01-.6 0L1.5 5.19zm0-1.72v.18l6.5 4.12 6.5-4.12v-.18a.25.25 0 00-.25-.25H1.75a.25.25 0 00-.25.25z"/></svg>Email</span><span class="v">sabin.shamsul@gmail.com</span></a>
