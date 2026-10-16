@@ -1,15 +1,3 @@
-// Clickjacking guard. GitHub Pages cannot send frame-ancestors or X-Frame-Options, and
-// browsers ignore frame-ancestors in a <meta> CSP, so another site could load this page in
-// an invisible frame and trick a visitor into using the contact form. Inside any frame the
-// CSS in index.html hides the page and shows only a link to open it directly. This runs
-// first because a sandboxed frame makes localStorage throw, which would stop everything below.
-if (window.top !== window.self) {
-  document.documentElement.classList.add('framed');
-  const notice = Object.assign(document.createElement('p'), { className: 'framed-notice' });
-  notice.append(Object.assign(document.createElement('a'), { href: location.href, target: '_blank', rel: 'noopener', textContent: 'Open sabinshamsul.dev in a new tab' }));
-  document.body.append(notice);
-}
-
 // Theme
 const root = document.documentElement;
 const themeToggle = document.getElementById('themeToggle');
@@ -395,7 +383,8 @@ document.querySelectorAll('.card').forEach(card => {
 });
 
 // A deep link must never stop the rest of this file (contact form, viewer, nav) from running.
-if (location.hash.startsWith('#project-')) {
+// Framed pages stay hidden (frame-guard.js), so a modal there would only make the notice inert.
+if (location.hash.startsWith('#project-') && !root.classList.contains('framed')) {
   try { openProject(location.hash.slice(9)); } catch (err) { console.error('Could not open project from link', err); }
 }
 
