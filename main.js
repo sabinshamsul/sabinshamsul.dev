@@ -1,13 +1,16 @@
 // Theme
 const root = document.documentElement;
 const themeToggle = document.getElementById('themeToggle');
-const saved = localStorage.getItem('theme');
+// Storage can be blocked (site data off, some privacy modes), and then any localStorage access
+// throws. Without these guards that would stop this whole file, contact form included.
+let saved = null;
+try { saved = localStorage.getItem('theme'); } catch (e) {}
 const systemLight = window.matchMedia('(prefers-color-scheme: light)').matches;
 if (saved === 'light' || (!saved && systemLight)) root.setAttribute('data-theme', 'light');
 themeToggle.addEventListener('click', () => {
   const next = root.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
   if (next === 'dark') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', 'light');
-  localStorage.setItem('theme', next);
+  try { localStorage.setItem('theme', next); } catch (e) {}
 });
 
 // Mobile menu
