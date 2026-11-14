@@ -444,7 +444,7 @@ if (location.hash.startsWith('#project-') && !root.classList.contains('framed'))
   const captchaError = (...parts) => { captchaErr.replaceChildren(...parts); captchaBox.classList.add('invalid'); };
   const failCaptcha = () => {
     captchaFailed = true; challengeOpen = false;
-    const mail = Object.assign(document.createElement('a'), { href: 'mailto:sabin.shamsul@gmail.com', className: 'inline-link', textContent: 'sabin.shamsul@gmail.com' });
+    const mail = Object.assign(document.createElement('a'), { href: 'mailto:hello@sabinshamsul.dev', className: 'inline-link', textContent: 'hello@sabinshamsul.dev' });
     captchaError('The spam check could not load (an ad blocker may be stopping it). Press Send to try again, reload the page, or email me at ', mail, '.');
   };
   const renderCaptcha = () => {
